@@ -1,14 +1,5 @@
-import React from "react";
+import AuthContainer from "@/components/auth/AuthContainer";
 
-import LoginForm from "../../components/auth/LoginForm";
-
-const LoginPage: React.FC = () => {
-  return (
-    <div>
-      
-      <LoginForm />
-    </div>
-  );
-};
-
-export default LoginPage;
+export default function LoginPage() {
+  return <AuthContainer />;
+}
