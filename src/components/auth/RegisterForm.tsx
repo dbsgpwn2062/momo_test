@@ -11,7 +11,7 @@ export default function RegisterForm() {
   const [password2, setPassword2] = useState("");
 
   const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // ✅ 폼 기본 제출 방지
 
     if (password !== password2) {
       alert("비밀번호가 일치하지 않습니다.");
@@ -19,20 +19,29 @@ export default function RegisterForm() {
     }
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/register_create/", {
+      const res = await fetch("http://127.0.0.1:8000/users/register/", {
+        // ✅ URL 확인
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, email, password, password2 }),
       });
 
-      const data = await res.json();
+      // ✅ 응답 데이터가 JSON인지 확인 후 파싱
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        data = null;
+      }
 
       if (res.status === 201) {
         alert("회원가입 성공!");
       } else {
+        console.error("회원가입 실패:", data);
         alert(`회원가입 실패: ${JSON.stringify(data)}`);
       }
     } catch (error) {
+      console.error("백엔드 요청 중 오류 발생:", error);
       alert("서버 오류 발생!");
     }
   };
@@ -63,7 +72,8 @@ export default function RegisterForm() {
         value={password2}
         onChange={(e) => setPassword2(e.target.value)}
       />
-      <Button text="회원가입" onClick={handleRegister} />
+      {/* ✅ `onClick` 제거하고, `type="submit"` 추가 */}
+      <Button text="회원가입" type="submit" />
     </form>
   );
 }
