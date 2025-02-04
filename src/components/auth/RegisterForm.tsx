@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import { registerUser } from "@/services/auth"; // ✅ 회원가입 API 함수 가져오기
 
 export default function RegisterForm() {
   const [username, setUsername] = useState("");
@@ -18,31 +19,14 @@ export default function RegisterForm() {
       return;
     }
 
-    try {
-      const res = await fetch("http://127.0.0.1:8000/users/register/", {
-        // ✅ URL 확인
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password, password2 }),
-      });
+    const res = await registerUser(username, email, password, password2);
 
-      // ✅ 응답 데이터가 JSON인지 확인 후 파싱
-      let data;
-      try {
-        data = await res.json();
-      } catch {
-        data = null;
-      }
-
-      if (res.status === 201) {
-        alert("회원가입 성공!");
-      } else {
-        console.error("회원가입 실패:", data);
-        alert(`회원가입 실패: ${JSON.stringify(data)}`);
-      }
-    } catch (error) {
-      console.error("백엔드 요청 중 오류 발생:", error);
-      alert("서버 오류 발생!");
+    if (res) {
+      alert("회원가입 성공!");
+      console.log("회원가입 응답:", res);
+      // ✅ 회원가입 후 로그인 페이지로 이동 가능
+    } else {
+      alert("회원가입 실패! 입력 정보를 확인하세요.");
     }
   };
 

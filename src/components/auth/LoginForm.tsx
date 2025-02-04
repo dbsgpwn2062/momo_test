@@ -1,12 +1,30 @@
 "use client";
 
 import React, { useState } from "react";
+import Button from "@/components/ui/Button";
+import { loginUser } from "@/services/auth"; // ✅ 로그인 API 추가
 
 const LoginPage: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const res = await loginUser(username, password);
+
+    if (res) {
+      alert("로그인 성공!");
+      console.log("로그인 응답:", res);
+      // ✅ 로그인 성공 시 페이지 이동 가능 (필요 시 추가)
+    } else {
+      alert("로그인 실패! 아이디 또는 비밀번호를 확인하세요.");
+    }
   };
 
   return (
@@ -34,12 +52,18 @@ const LoginPage: React.FC = () => {
         <nav>
           <ul className="space-y-4">
             <li>
-              <a href="#home" className="text-gray-700 ml-5 hover:text-purple-500">
+              <a
+                href="#home"
+                className="text-gray-700 ml-5 hover:text-purple-500"
+              >
                 Home
               </a>
             </li>
             <li>
-              <a href="#signup" className="text-gray-700 ml-5 hover:text-purple-500">
+              <a
+                href="#signup"
+                className="text-gray-700 ml-5 hover:text-purple-500"
+              >
                 회원가입
               </a>
             </li>
@@ -72,17 +96,6 @@ const LoginPage: React.FC = () => {
               className="w-45 h-45"
               style={{ transform: "translateX(130px)" }}
             />
-            {/* <div className="text-center" style={{ transform: "translateX(100px)" }}>
-              <h1 className="text-6xl font-bold text-black"></h1>
-              <span
-                className="text-sm font-semibold bg-clip-text text-transparent"
-                style={{
-                  backgroundImage: "linear-gradient(to right, #6a11cb, #2575fc)",
-                }}
-              >
-                
-              </span>
-            </div> */}
           </div>
 
           {/* Right Section: Login Card */}
@@ -90,15 +103,21 @@ const LoginPage: React.FC = () => {
             className="bg-white p-20 rounded-xl shadow-lg w-45"
             style={{ transform: "translateX(100px)" }}
           >
-            <h2 className="text-2xl font-semibold text-gray-900 text-center">Login</h2>
-            <p className="text-sm text-gray-500 mb-6 text-center">Glad you're back.!</p>
+            <h2 className="text-2xl font-semibold text-gray-900 text-center">
+              Login
+            </h2>
+            <p className="text-sm text-gray-500 mb-6 text-center">
+              Glad you're back.!
+            </p>
 
             {/* Login Form */}
-            <form className="flex flex-col space-y-4">
+            <form className="flex flex-col space-y-4" onSubmit={handleLogin}>
               <div>
                 <input
                   type="text"
                   placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 />
               </div>
@@ -106,15 +125,17 @@ const LoginPage: React.FC = () => {
                 <input
                   type="password"
                   placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 />
               </div>
-              <button
+              {/* ✅ 로그인 버튼 (API 요청 추가됨) */}
+              <Button
+                text="Login"
                 type="submit"
-                className="bg-gradient-to-r from-purple-500 to-blue-500 text-white py-2 rounded-md hover:opacity-90 transition"
-              >
-                Login
-              </button>
+                className="bg-gradient-to-r from-purple-500 to-blue-500 text-white hover:opacity-90 transition"
+              />
             </form>
 
             {/* Or Section */}
