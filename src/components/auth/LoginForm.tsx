@@ -10,29 +10,36 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="relative h-screen bg-white px-4">
+    <div
+      className={`relative h-screen bg-cover bg-center px-4 transform ${
+        menuOpen ? "translate-x-0" : "translate-x-0"
+      } transition-transform`}
+      style={{
+        backgroundImage: `url('/unicorn-pastel-phone-wallpaper-background.jpg')`,
+      }}
+    >
       {/* Sidebar */}
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-gray-100 shadow-lg p-6 transform ${
-          menuOpen ? "translate-x-0" : "translate-x-full"
+        className={`fixed top-0 left-0 h-full w-64 bg-gray-100 shadow-lg p-6 transform ${
+          menuOpen ? "translate-x-0" : "-translate-x-full"
         } transition-transform`}
       >
         <button
-          className="absolute top-4 left-4 text-gray-500 hover:text-gray-800"
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-800"
           onClick={toggleMenu}
         >
           ✕
         </button>
-        <h2 className="text-xl font-bold mb-4">Menu</h2>
+        <h2 className="text-xl font-bold ml-5 mb-4">Menu</h2>
         <nav>
           <ul className="space-y-4">
             <li>
-              <a href="#home" className="text-gray-700 hover:text-purple-500">
+              <a href="#home" className="text-gray-700 ml-5 hover:text-purple-500">
                 Home
               </a>
             </li>
             <li>
-              <a href="#signup" className="text-gray-700 hover:text-purple-500">
+              <a href="#signup" className="text-gray-700 ml-5 hover:text-purple-500">
                 회원가입
               </a>
             </li>
@@ -41,7 +48,7 @@ const LoginPage: React.FC = () => {
       </div>
 
       {/* Hamburger Menu Button */}
-      <div className="absolute top-4 right-4">
+      <div className="absolute top-4 left-0">
         <button
           onClick={toggleMenu}
           className="w-10 h-10 bg-gray-100 flex items-center justify-center rounded-md hover:bg-gray-200"
@@ -63,25 +70,25 @@ const LoginPage: React.FC = () => {
               src="/momo.png"
               alt="Momo Logo"
               className="w-45 h-45"
-              style={{ transform: "translateX(-50px)" }}
+              style={{ transform: "translateX(130px)" }}
             />
-            <div className="text-center" style={{ transform: "translateX(100px)" }}>
-              <h1 className="text-6xl font-bold text-black">momo</h1>
+            {/* <div className="text-center" style={{ transform: "translateX(100px)" }}>
+              <h1 className="text-6xl font-bold text-black"></h1>
               <span
                 className="text-sm font-semibold bg-clip-text text-transparent"
                 style={{
                   backgroundImage: "linear-gradient(to right, #6a11cb, #2575fc)",
                 }}
               >
-                mood movie
+                
               </span>
-            </div>
+            </div> */}
           </div>
 
           {/* Right Section: Login Card */}
           <div
-            className="bg-white p-8 rounded-xl shadow-lg w-96"
-            style={{ transform: "translateX(110px)" }}
+            className="bg-white p-20 rounded-xl shadow-lg w-45"
+            style={{ transform: "translateX(100px)" }}
           >
             <h2 className="text-2xl font-semibold text-gray-900 text-center">Login</h2>
             <p className="text-sm text-gray-500 mb-6 text-center">Glad you're back.!</p>
