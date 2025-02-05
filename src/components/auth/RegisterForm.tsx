@@ -45,7 +45,7 @@ export default function RegisterForm({ setAuthMode }: RegisterFormProps) {
       </div>
 
       {/* 회원가입 폼 */}
-      <form className="flex flex-col gap-8 w-full" onSubmit={handleRegister}>
+      <form className="flex flex-col gap-6 w-full" onSubmit={handleRegister}>
         <Input
           type="text"
           placeholder="Username"
