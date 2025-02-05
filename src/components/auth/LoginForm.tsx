@@ -9,13 +9,13 @@ interface LoginFormProps {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ setAuthMode }) => {
-  const [username, setUsername] = useState("");
+  const [email, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const res = await loginUser(username, password);
+    const res = await loginUser(email, password);
 
     if (res) {
       alert("로그인 성공!");
@@ -38,8 +38,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ setAuthMode }) => {
       <form className="flex flex-col gap-8 w-full" onSubmit={handleLogin}>
         <input
           type="text"
-          placeholder="Username"
-          value={username}
+          placeholder="Email"
+          value={email}
           onChange={(e) => setUsername(e.target.value)}
           className="auth-input h-12"
         />

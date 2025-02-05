@@ -13,23 +13,33 @@ export default function RegisterForm({ setAuthMode }: RegisterFormProps) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (password !== password2) {
+    if (password !== passwordConfirmation) {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
 
-    const res = await registerUser(username, email, password, password2);
+    try {
+      const res = await registerUser(
+        username,
+        email,
+        password,
+        passwordConfirmation
+      );
 
-    if (res) {
-      alert("회원가입 성공!");
-      console.log("회원가입 응답:", res);
-    } else {
-      alert("회원가입 실패! 입력 정보를 확인하세요.");
+      if (res?.success) {
+        alert("회원가입 성공!");
+        setAuthMode("login"); // ✅ 회원가입 성공 후 로그인 화면으로 전환
+      } else {
+        alert(res?.message || "회원가입 실패! 입력 정보를 확인하세요.");
+      }
+    } catch (error) {
+      console.error("회원가입 중 오류 발생:", error);
+      alert("회원가입 요청 중 오류가 발생했습니다.");
     }
   };
 
@@ -48,14 +58,14 @@ export default function RegisterForm({ setAuthMode }: RegisterFormProps) {
       <form className="flex flex-col gap-6 w-full" onSubmit={handleRegister}>
         <Input
           type="text"
-          placeholder="Username"
+          placeholder="Nickname"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           className="auth-input h-12"
         />
         <Input
-          type="Email"
-          placeholder="email"
+          type="email"
+          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="auth-input h-12"
@@ -69,9 +79,9 @@ export default function RegisterForm({ setAuthMode }: RegisterFormProps) {
         />
         <Input
           type="password"
-          placeholder="Confirm password"
-          value={password2}
-          onChange={(e) => setPassword2(e.target.value)}
+          placeholder="Confirm Password"
+          value={passwordConfirmation}
+          onChange={(e) => setPasswordConfirmation(e.target.value)}
           className="auth-input h-12"
         />
         <div className="flex flex-col gap-2">
