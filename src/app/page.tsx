@@ -1,9 +1,9 @@
-import Image from "next/image";
+import CalendarForm from "@/components/mainForm/CalendarForm";
 
 export default function Home() {
   return (
-    <div className="flex items-center justify-center h-screen bg-red-500 text-white">
-      Tailwind CSS 테스트
+    <div>
+      <h1>캘린더 폼 테스트</h1>
     </div>
   );
 }

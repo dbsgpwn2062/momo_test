@@ -1,55 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-@layer base {
-  @font-face {
-    font-family: "kimbeaesun";
-    src: url("/fonts/kimbeansun.woff2") format("woff2");
-  }
-
-  @font-face {
-    font-family: "Wellstudy";
-    src: url("/fonts/wellstudy.woff2") format("woff2");
-  }
-
-  @font-face {
-    font-family: "Ryupig";
-    src: url("/fonts/ryupig.woff2") format("woff2");
-  }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: "Arial", sans-serif;
-}
-
-.kimbaesun {
-  font-family: "kimbeaesun", sans-serif;
-}
-
-.wellstudio {
-  font-family: "Wellstudy", sans-serif;
-}
-
-.ryupig {
-  font-family: "Ryupig", sans-serif;
-}
-
-/* -----캘린더 스타일---- */
 .react-calendar {
   font-family: "Ryupig", sans-serif;
   font-weight: 1500;
@@ -163,7 +111,7 @@ body {
 .react-calendar__navigation button {
   background: none;
   border: none;
-  font-size: 30px;
+  font-size: 18px;
   cursor: pointer;
   padding: 5px 10px;
 }
@@ -185,9 +133,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 30px;
-  padding-right: 80px;
-  padding-left: 80px;
+  font-size: 18px;
+  padding: 5px;
 }
 
 /* < 버튼을 연도+월 텍스트 왼쪽에 배치 */
@@ -253,35 +200,6 @@ body {
 .react-calendar__tile--rangeEnd {
   background: transparent !important;
   border: 2px solid #ddd !important;
-}
-
-/* DiaryForm이 오른쪽에서 나오는 효과 */
-.diaryPanel {
-  position: fixed;
-  top: 0;
-  right: -400px; /* ✅ 기본적으로 숨겨짐 */
-  width: 350px;
-  height: 100%;
-  background: white;
-  box-shadow: -5px 0 10px rgba(0, 0, 0, 0.2);
-  padding: 20px;
-  transition: right 0.3s ease-in-out;
-}
-
-/* 다이어리 패널이 열릴 때 */
-.diaryPanel.open {
-  right: 0; /* ✅ 오른쪽에서 등장 */
-}
-
-/* 닫기 버튼 스타일 */
-.closeButton {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
 }
 
 /* 반응형 대응 */

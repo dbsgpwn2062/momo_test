@@ -9,14 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "dayjs": "^1.11.13",
     "next": "15.1.6",
     "react": "^19.0.0",
+    "react-calendar": "^5.1.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@types/node": "^20",
     "@types/react": "^19",
+    "@types/react-calendar": "^3.9.0",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.20",
     "eslint": "^9",
