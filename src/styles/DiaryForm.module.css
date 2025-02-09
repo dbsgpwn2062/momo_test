@@ -1,8 +1,8 @@
 .diaryPanel {
   position: fixed;
   top: 0;
-  right: -400px; /* 초기에는 화면 밖에 위치 */
-  width: 350px;
+  right: -600px; /* 초기에는 화면 밖에 위치 */
+  width: 600px;
   height: 100vh;
   background: white;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
@@ -11,33 +11,69 @@
   flex-direction: column;
   padding: 20px;
   z-index: 1000;
+  overflow-y: auto; /* ✅ 세로 스크롤 추가 */
+  max-height: 100vh; /* ✅ 전체 화면 높이 */
 }
 
+/* ✅ 다이어리 폼이 열릴 때 */
 .diaryPanel.open {
-  right: 0; /* 슬라이드로 들어옴 */
+  right: 0;
 }
 
+/* ✅ 스크롤바 스타일 조정 */
+.diaryPanel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.diaryPanel::-webkit-scrollbar-thumb {
+  background-color: #bbb;
+  border-radius: 10px;
+}
+
+.diaryPanel::-webkit-scrollbar-track {
+  background-color: #f0f0f0;
+}
+
+/* ✅ 닫기 버튼 스타일 */
 .closeButton {
-  align-self: flex-end;
-  background: none;
-  border: none;
-  font-size: 20px;
+  position: fixed; /* ✅ 화면 기준으로 고정 */
+  top: 20px; /* ✅ 화면의 상단에서 20px 떨어짐 */
+  right: 30px; /* ✅ 화면의 오른쪽에서 30px 떨어짐 */
+  background: white;
+  border-radius: 5px;
+  font-size: 18px;
+  padding: 8px 12px;
   cursor: pointer;
+  z-index: 1100; /* ✅ 다른 요소보다 위에 배치 */
 }
 
+/* ✅ 입력창 스타일 유지 + 크기 조정 */
 .textarea {
   width: 100%;
-  height: 200px;
-  margin-top: 10px;
+  margin-top: 50px;
+  margin-bottom: 20px;
+  min-height: 200px; /* ✅ 최소 높이 유지 */
+  max-height: 500px; /* ✅ 최대 높이 제한 */
   padding: 10px;
   font-size: 16px;
+  resize: vertical; /* ✅ 세로 크기 조절 가능 */
+  border: 2px solid #ccc;
 }
 
+/* ✅ 버튼 스타일 */
 .button {
   margin-top: 10px;
-  padding: 10px;
-  background: #007bff;
-  color: white;
-  border: none;
+  padding: 10px 20px;
+  background: white;
+  color: black;
+  border: 2px solid black;
+  border-radius: 20px;
+  font-size: 18px;
+  font-weight: bold;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.button:hover {
+  background: rgba(0, 0, 0, 0.1);
 }

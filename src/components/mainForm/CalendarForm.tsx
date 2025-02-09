@@ -18,7 +18,6 @@ export default function CalendarForm({ onDateSelect }: CalendarFormProps) {
 
   return (
     <div className={styles.calendarContainer}>
-      <h2>📆 캘린더</h2>
       <Calendar
         onChange={handleDateChange}
         className={styles.reactCalendar}

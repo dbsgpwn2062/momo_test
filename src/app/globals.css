@@ -255,34 +255,7 @@ body {
   border: 2px solid #ddd !important;
 }
 
-/* DiaryForm이 오른쪽에서 나오는 효과 */
-.diaryPanel {
-  position: fixed;
-  top: 0;
-  right: -400px; /* ✅ 기본적으로 숨겨짐 */
-  width: 350px;
-  height: 100%;
-  background: white;
-  box-shadow: -5px 0 10px rgba(0, 0, 0, 0.2);
-  padding: 20px;
-  transition: right 0.3s ease-in-out;
-}
-
-/* 다이어리 패널이 열릴 때 */
-.diaryPanel.open {
-  right: 0; /* ✅ 오른쪽에서 등장 */
-}
-
-/* 닫기 버튼 스타일 */
-.closeButton {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-}
+/*---Diary----*/
 
 /* 반응형 대응 */
 @media screen and (max-width: 600px) {
