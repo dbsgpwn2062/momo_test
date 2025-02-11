@@ -15,13 +15,18 @@ export default function MainPage() {
     setIsDiaryOpen(true);
   };
 
-  // ✅ 수정된 `handleSaveDiary` (data 객체 하나를 받음)
-  const handleSaveDiary = (data: { date: Date; content: string }) => {
+  // ✅ `date`가 undefined일 가능성 대비 (TypeScript 오류 해결)
+  const handleSaveDiary = (data: { date?: Date; content: string }) => {
+    if (!data.date) {
+      console.error("⚠️ handleSaveDiary에서 date가 undefined입니다.");
+      return; // ✅ date가 undefined면 실행하지 않음
+    }
+
     setDiaryEntries((prev) => ({
       ...prev,
-      [data.date.toDateString()]: data.content,
+      [data.date?.toDateString() || "날짜 없음"]: data.content, // ✅ date가 null이면 "날짜 없음" 키 사용
     }));
-    setIsDiaryOpen(false); // 저장 후 창 닫기
+    setIsDiaryOpen(false);
   };
 
   return (
@@ -29,7 +34,7 @@ export default function MainPage() {
       {/* 캘린더 폼 */}
       <CalendarForm onDateSelect={handleDateSelect} />
 
-      {/* 다이어리 폼 */}
+      {/* 다이어리 폼 (selectedDate가 null이면 렌더링하지 않음) */}
       {isDiaryOpen && selectedDate && (
         <DiaryForm
           date={selectedDate}

@@ -13,7 +13,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 interface DiaryFormProps {
   date: Date | null;
-  onSave: (data: any) => void;
+  onSave: (data: { date: Date; content: string }) => void; // ✅ date가 항상 `Date` 객체여야 함
   onClose: () => void;
 }
 
@@ -52,18 +52,8 @@ export default function DiaryForm({ date, onSave, onClose }: DiaryFormProps) {
   const handleSave = async () => {
     if (!date) {
       alert("날짜를 선택하세요.");
-      return;
-    }
-
-    // ✅ sessionStorage에서 idToken 가져오기
-    const idToken = sessionStorage.getItem("idToken");
-    if (!idToken) {
-      alert("로그인이 필요합니다.");
-      console.warn(
-        "⚠️ idToken이 존재하지 않습니다. 로그인 페이지로 이동합니다."
-      );
-      router.push("/login"); // 로그인 페이지로 이동
-      return;
+      console.error("⚠️ DiaryForm에서 date가 undefined입니다.");
+      return; // ✅ date가 undefined면 실행하지 않음
     }
 
     const formattedDateKey = dayjs(date).format("YYYY-MM-DD");
@@ -84,12 +74,21 @@ export default function DiaryForm({ date, onSave, onClose }: DiaryFormProps) {
     };
 
     console.log("📤 저장 데이터:", JSON.stringify(payload, null, 2));
-    console.log("✅ API 요청 URL:", `${API_BASE_URL}/home/calendar/`);
 
     setIsSaving(true); // ✅ 저장 시작
 
     try {
-      const response = await fetch(`${API_BASE_URL}/home/calendar/`, {
+      const idToken = sessionStorage.getItem("idToken"); // ✅ Cognito idToken 가져오기
+      if (!idToken) {
+        alert("로그인이 필요합니다.");
+        console.warn(
+          "⚠️ idToken이 존재하지 않습니다. 로그인 페이지로 이동합니다."
+        );
+        router.push("/login"); // 로그인 페이지로 이동
+        return;
+      }
+
+      const response = await fetch(`${API_BASE_URL}/home/calendar/write`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -107,7 +106,9 @@ export default function DiaryForm({ date, onSave, onClose }: DiaryFormProps) {
       const result = await response.json();
       console.log("✅ 저장 성공:", result);
       alert("일기가 성공적으로 저장되었습니다!");
-      onSave(result); // 성공 시 상태 업데이트
+
+      // ✅ onSave 호출 시 항상 Date 객체를 넘기도록 보장
+      onSave({ date, content: diary });
     } catch (error) {
       console.error("❌ 저장 오류:", error);
       alert("저장 중 오류가 발생했습니다.");
