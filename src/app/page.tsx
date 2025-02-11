@@ -1,9 +1,17 @@
-import CalendarForm from "@/components/mainForm/CalendarForm";
+"use client";
+
+import { COGNITO_LOGIN_URL } from "@/services/auth";
 
 export default function Home() {
   return (
-    <div>
-      <h1>캘린더 폼 테스트</h1>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h1 className="text-2xl font-semibold">Welcome to Our App!</h1>
+      <button
+        onClick={() => (window.location.href = COGNITO_LOGIN_URL)}
+        className="mt-4 px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg"
+      >
+        로그인하기
+      </button>
     </div>
   );
 }

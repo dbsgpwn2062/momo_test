@@ -1,84 +1,36 @@
-/* ✅ 공통 스타일 - 제목 크기 조정 및 마진 추가 */
-.emojiPicker h3 {
-  font-size: 22px; /* ✅ 글씨 크기 증가 */
-  margin-bottom: 15px; /* ✅ 아래 여백 추가 */
-  margin-top: 20px; /* ✅ 위 여백 추가 */
-  font-weight: bold;
-  text-align: left; /* ✅ 왼쪽 정렬 */
-  width: 100%;
-  margin-top: 50px;
-}
-
-/* ✅ 전체 이모지 선택 섹션 스타일 */
-.emojiSection {
+/* ✅ 공통 스타일 */
+.emojiPicker {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* ✅ 왼쪽 정렬 */
-  margin-bottom: 25px; /* ✅ 각 섹션 간 간격 */
+  align-items: flex-start;
+  width: 100%;
 }
 
-/* ✅ 이모지 리스트 */
+.emojiPicker h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+/* ✅ 이모지 리스트 (한 줄에 여러 개 배치) */
 .emojiList {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px; /* ✅ 간격 조정 */
-  justify-content: flex-start; /* ✅ 왼쪽 정렬 */
+  gap: 15px;
+  justify-content: flex-start;
 }
 
-/* ✅ 감정 이모지 스타일 */
-.emojiImage_emo {
+/* ✅ 이모지 이미지 스타일 */
+.emojiImage {
   width: 50px;
   height: 50px;
   cursor: pointer;
+  transition: transform 0.2s ease-in-out;
   border-radius: 50%;
-  transition: transform 0.2s ease-in-out;
   border: 2px solid transparent;
 }
 
-.emojiImage_emo.selected {
-  border: 2px solid blue;
-  transform: scale(1.1);
-}
-
-/* ✅ 일상 이모지 스타일 */
-.emojiImage_daily {
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out;
-  border: 2px solid transparent;
-}
-
-.emojiImage_daily.selected {
-  border: 2px solid blue;
-  transform: scale(1.1);
-}
-
-/* ✅ 활동 이모지 스타일 */
-.emojiImage_activity {
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out;
-  border: 2px solid transparent;
-}
-
-.emojiImage_activity.selected {
-  border: 2px solid blue;
-  transform: scale(1.1);
-}
-
-/* ✅ 날씨 이모지 스타일 */
-.emojiImage_weather {
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-  border-radius: 50%;
-  transition: transform 0.2s ease-in-out;
-  border: 2px solid transparent;
-}
-
-.emojiImage_weather.selected {
+.emojiImage.selected {
   border: 2px solid blue;
   transform: scale(1.1);
 }

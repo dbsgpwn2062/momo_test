@@ -15,10 +15,11 @@ export default function MainPage() {
     setIsDiaryOpen(true);
   };
 
-  const handleSaveDiary = (date: Date, content: string) => {
+  // ✅ 수정된 `handleSaveDiary` (data 객체 하나를 받음)
+  const handleSaveDiary = (data: { date: Date; content: string }) => {
     setDiaryEntries((prev) => ({
       ...prev,
-      [date.toDateString()]: content,
+      [data.date.toDateString()]: data.content,
     }));
     setIsDiaryOpen(false); // 저장 후 창 닫기
   };
@@ -32,7 +33,7 @@ export default function MainPage() {
       {isDiaryOpen && selectedDate && (
         <DiaryForm
           date={selectedDate}
-          onSave={handleSaveDiary}
+          onSave={handleSaveDiary} // ✅ 수정된 onSave 적용
           onClose={() => setIsDiaryOpen(false)}
         />
       )}
