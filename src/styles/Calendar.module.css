@@ -183,7 +183,7 @@
 .react-calendar__tile--now abbr::after {
   content: " today!";
   font-size: 20px;
-  color: #318a27; /* 노란색 */
+  color: #18711e; /* 노란색 */
   margin-left: 5px; /* 숫자와 간격 */
 }
 
@@ -200,6 +200,16 @@
 .react-calendar__tile--rangeEnd {
   background: transparent !important;
   border: 2px solid #ddd !important;
+}
+
+.highlight::after {
+  content: "작성완료 ✔"; /* ✅ 체크마크 아이콘 */
+  position: absolute;
+  bottom: 2px; /* ✅ 오른쪽 하단 정렬 */
+  right: 2px;
+  font-size: 15px; /* ✅ 크기 조절 */
+  color: rgb(173, 84, 173); /* ✅ 보라색 */
+  font-weight: bold;
 }
 
 /* 반응형 대응 */

@@ -1,0 +1,51 @@
+.readDiaryContainer {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+  max-width: 500px;
+  margin: auto;
+  text-align: center;
+}
+
+.readDiaryHeader {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.readDiaryContent {
+  font-size: 1rem;
+  color: #333;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  min-height: 150px;
+}
+
+.readDiaryCloseButton {
+  background-color: #ff5f5f;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.readDiaryCloseButton:hover {
+  background-color: #e04e4e;
+}
+
+.emojiContainer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.emojiItem {
+  font-size: 1.5rem;
+}

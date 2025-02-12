@@ -3,19 +3,35 @@
 import { useState } from "react";
 import Calendar, { CalendarProps } from "react-calendar";
 import styles from "@/styles/Calendar.module.css";
+import dayjs from "dayjs";
 
 interface CalendarFormProps {
   onDateSelect: (date: Date) => void;
-  diaryEntries?: Record<string, any>; // ✅ diaryEntries를 옵셔널로 변경
+  onMonthChange: (year: number, month: number) => void;
+  diaryEntries?: Record<string, any>;
 }
 
 export default function CalendarForm({
   onDateSelect,
+  onMonthChange,
   diaryEntries = {},
 }: CalendarFormProps) {
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+
+  // ✅ 달 변경 감지 함수
+  const handleActiveStartDateChange: CalendarProps["onActiveStartDateChange"] =
+    ({ activeStartDate }) => {
+      if (activeStartDate) {
+        setCurrentMonth(activeStartDate);
+        onMonthChange(
+          activeStartDate.getFullYear(),
+          activeStartDate.getMonth() + 1
+        );
+      }
+    };
+
   const handleDateChange: CalendarProps["onChange"] = (value) => {
     if (value instanceof Date) {
-      console.log("📅 선택한 날짜:", value.toDateString());
       onDateSelect(value);
     }
   };
@@ -24,6 +40,7 @@ export default function CalendarForm({
     <div className={styles.calendarContainer}>
       <Calendar
         onChange={handleDateChange}
+        onActiveStartDateChange={handleActiveStartDateChange}
         className={styles.reactCalendar}
         locale="ko-KR"
         calendarType="gregory"
@@ -36,10 +53,8 @@ export default function CalendarForm({
         next2Label="≫"
         formatDay={(locale, date) => date.getDate().toString()}
         tileClassName={({ date }) => {
-          const dateKey = date.toISOString().split("T")[0];
-
-          // ✅ diaryEntries가 undefined이면 빈 객체 `{}`를 사용
-          return diaryEntries?.[dateKey] ? styles.highlight : "";
+          const dateKey = dayjs(date).format("YYYY-MM-DD");
+          return diaryEntries?.[dateKey] ? styles.highlight : ""; // ✅ 작성 완료된 날짜만 강조
         }}
       />
     </div>

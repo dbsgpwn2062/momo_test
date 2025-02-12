@@ -236,7 +236,7 @@ body {
 .react-calendar__tile--now abbr::after {
   content: " today!";
   font-size: 20px;
-  color: #318a27; /* 노란색 */
+  color: #509948; /* 노란색 */
   margin-left: 5px; /* 숫자와 간격 */
 }
 
@@ -253,6 +253,26 @@ body {
 .react-calendar__tile--rangeEnd {
   background: transparent !important;
   border: 2px solid #ddd !important;
+}
+
+/* 작성 완료된 날짜 스타일 */
+.highlight {
+  background-color: #a855f7 !important; /* ✅ 보라색 */
+  color: white !important;
+  border-radius: 50%; /* ✅ 동그랗게 */
+  font-weight: bold;
+  text-align: center;
+}
+
+/* 오른쪽 하단에 작은 원으로 표시 */
+.highlight::after {
+  content: "✔"; /* ✅ 체크마크 아이콘 */
+  position: absolute;
+  bottom: 2px; /* ✅ 오른쪽 하단 정렬 */
+  right: 2px;
+  font-size: 12px; /* ✅ 크기 조절 */
+  color: purple; /* ✅ 보라색 */
+  font-weight: bold;
 }
 
 /*---Diary----*/

@@ -10,7 +10,7 @@ import { emojiMappings } from "@../../utils/emojiMappings";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-// ✅ 이모지 변환 함수 추가
+// ✅ 이모지 변환 함수
 const convertToTextArray = (emojiList: string[]): string[] => {
   return emojiList.map((emoji) => emojiMappings[emoji] || emoji);
 };
@@ -30,7 +30,7 @@ export default function DiaryForm({
 }: DiaryFormProps) {
   const router = useRouter();
   const [diary, setDiary] = useState("");
-  const [selectedWeather, setSelectedWeather] = useState<string>("");
+  const [selectedWeather, setSelectedWeather] = useState("");
   const [selectedEmojis, setSelectedEmojis] = useState<string[]>([]);
   const [selectedDaily, setSelectedDaily] = useState<string[]>([]);
   const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
@@ -44,14 +44,12 @@ export default function DiaryForm({
   // ✅ GET 데이터 적용
   useEffect(() => {
     if (diaryData) {
-      console.log("📜 불러온 일기 데이터:", diaryData);
       setDiary(diaryData.diary || "");
       setSelectedWeather(diaryData.emoticons?.weather || "");
       setSelectedEmojis(diaryData.emoticons?.emotion || []);
       setSelectedDaily(diaryData.emoticons?.daily || []);
       setSelectedActivities(diaryData.emoticons?.activity || []);
     } else {
-      console.warn("⚠️ diaryData 없음. 초기화 진행");
       setDiary("");
       setSelectedWeather("");
       setSelectedEmojis([]);
@@ -85,8 +83,6 @@ export default function DiaryForm({
       },
     };
 
-    console.log("📤 저장 데이터:", JSON.stringify(payload, null, 2));
-
     setIsSaving(true);
 
     try {
@@ -110,12 +106,9 @@ export default function DiaryForm({
         throw new Error("저장 실패");
       }
 
-      console.log("✅ 저장 성공!");
       alert("일기가 성공적으로 저장되었습니다!");
-
       await onSave();
     } catch (error) {
-      console.error("❌ 저장 오류:", error);
       alert("저장 중 오류가 발생했습니다.");
     } finally {
       setIsSaving(false);
