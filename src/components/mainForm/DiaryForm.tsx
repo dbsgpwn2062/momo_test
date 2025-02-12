@@ -6,54 +6,66 @@ import styles from "@/styles/DiaryForm.module.css";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import EmojiPicker from "@/components/mainForm/EmojiPicker";
-import { emojiMappings } from "@../../utils/emojiMappings"; // ✅ import 경로 수정
+import { emojiMappings } from "@../../utils/emojiMappings";
 
-// ✅ 환경 변수에서 API BASE URL 가져오기
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+// ✅ 이모지 변환 함수 추가
+const convertToTextArray = (emojiList: string[]): string[] => {
+  return emojiList.map((emoji) => emojiMappings[emoji] || emoji);
+};
 
 interface DiaryFormProps {
   date: Date | null;
-  onSave: (data: { date: Date; content: string }) => void; // ✅ date가 항상 `Date` 객체여야 함
+  diaryData: any;
   onClose: () => void;
+  onSave: () => Promise<void>;
 }
 
-export default function DiaryForm({ date, onSave, onClose }: DiaryFormProps) {
+export default function DiaryForm({
+  date,
+  diaryData,
+  onClose,
+  onSave,
+}: DiaryFormProps) {
   const router = useRouter();
   const [diary, setDiary] = useState("");
-  const [selectedWeather, setSelectedWeather] = useState<string>(""); // ✅ 단일 선택
-  const [selectedEmojis, setSelectedEmojis] = useState<string>(""); // ✅ 쉼표 구분된 문자열 유지
-  const [selectedDaily, setSelectedDaily] = useState<string>(""); // ✅ 쉼표 구분된 문자열 유지
-  const [selectedActivities, setSelectedActivities] = useState<string>(""); // ✅ 쉼표 구분된 문자열 유지
+  const [selectedWeather, setSelectedWeather] = useState<string>("");
+  const [selectedEmojis, setSelectedEmojis] = useState<string[]>([]);
+  const [selectedDaily, setSelectedDaily] = useState<string[]>([]);
+  const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
   const [resetTrigger, setResetTrigger] = useState(0);
-  const [isSaving, setIsSaving] = useState(false); // ✅ 저장 중 상태 관리
+  const [isSaving, setIsSaving] = useState(false);
 
   const formattedDate = date
     ? dayjs(date).locale("ko").format("YYYY년 M월 D일 dddd")
     : "날짜 선택 안됨";
 
-  // ✅ 날짜 변경 시 모든 선택 초기화
+  // ✅ GET 데이터 적용
   useEffect(() => {
-    setDiary("");
-    setSelectedWeather("");
-    setSelectedEmojis("");
-    setSelectedDaily("");
-    setSelectedActivities("");
+    if (diaryData) {
+      console.log("📜 불러온 일기 데이터:", diaryData);
+      setDiary(diaryData.diary || "");
+      setSelectedWeather(diaryData.emoticons?.weather || "");
+      setSelectedEmojis(diaryData.emoticons?.emotion || []);
+      setSelectedDaily(diaryData.emoticons?.daily || []);
+      setSelectedActivities(diaryData.emoticons?.activity || []);
+    } else {
+      console.warn("⚠️ diaryData 없음. 초기화 진행");
+      setDiary("");
+      setSelectedWeather("");
+      setSelectedEmojis([]);
+      setSelectedDaily([]);
+      setSelectedActivities([]);
+    }
     setResetTrigger((prev) => prev + 1);
-  }, [date]);
+  }, [diaryData, date]);
 
-  // ✅ API 요청을 위한 이모지 변환
-  const convertToTextArray = (emojiString: string) => {
-    return emojiString
-      ? emojiString.split(",").map((emoji) => emojiMappings[emoji] || emoji)
-      : [];
-  };
-
-  // ✅ 저장 및 API 전송
+  // ✅ 저장 버튼 기능 (POST 요청)
   const handleSave = async () => {
     if (!date) {
       alert("날짜를 선택하세요.");
-      console.error("⚠️ DiaryForm에서 date가 undefined입니다.");
-      return; // ✅ date가 undefined면 실행하지 않음
+      return;
     }
 
     const formattedDateKey = dayjs(date).format("YYYY-MM-DD");
@@ -75,16 +87,13 @@ export default function DiaryForm({ date, onSave, onClose }: DiaryFormProps) {
 
     console.log("📤 저장 데이터:", JSON.stringify(payload, null, 2));
 
-    setIsSaving(true); // ✅ 저장 시작
+    setIsSaving(true);
 
     try {
-      const idToken = sessionStorage.getItem("idToken"); // ✅ Cognito idToken 가져오기
+      const idToken = sessionStorage.getItem("idToken");
       if (!idToken) {
         alert("로그인이 필요합니다.");
-        console.warn(
-          "⚠️ idToken이 존재하지 않습니다. 로그인 페이지로 이동합니다."
-        );
-        router.push("/login"); // 로그인 페이지로 이동
+        router.push("/login");
         return;
       }
 
@@ -92,23 +101,19 @@ export default function DiaryForm({ date, onSave, onClose }: DiaryFormProps) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${idToken}`, // ✅ Cognito idToken 인증 추가
+          Authorization: `Bearer ${idToken}`,
         },
         body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error("❌ 서버 응답 오류:", errorText);
         throw new Error("저장 실패");
       }
 
-      const result = await response.json();
-      console.log("✅ 저장 성공:", result);
+      console.log("✅ 저장 성공!");
       alert("일기가 성공적으로 저장되었습니다!");
 
-      // ✅ onSave 호출 시 항상 Date 객체를 넘기도록 보장
-      onSave({ date, content: diary });
+      await onSave();
     } catch (error) {
       console.error("❌ 저장 오류:", error);
       alert("저장 중 오류가 발생했습니다.");
@@ -134,22 +139,22 @@ export default function DiaryForm({ date, onSave, onClose }: DiaryFormProps) {
       <EmojiPicker
         title="기분"
         type="emotion"
-        selected={selectedEmojis}
-        onSelect={setSelectedEmojis}
+        selected={selectedEmojis.join(",")}
+        onSelect={(e) => setSelectedEmojis(e.split(","))}
         resetTrigger={resetTrigger}
       />
       <EmojiPicker
         title="일상"
         type="daily"
-        selected={selectedDaily}
-        onSelect={setSelectedDaily}
+        selected={selectedDaily.join(",")}
+        onSelect={(e) => setSelectedDaily(e.split(","))}
         resetTrigger={resetTrigger}
       />
       <EmojiPicker
         title="활동"
         type="activity"
-        selected={selectedActivities}
-        onSelect={setSelectedActivities}
+        selected={selectedActivities.join(",")}
+        onSelect={(e) => setSelectedActivities(e.split(","))}
         resetTrigger={resetTrigger}
       />
 
@@ -159,6 +164,7 @@ export default function DiaryForm({ date, onSave, onClose }: DiaryFormProps) {
         placeholder="오늘의 일기를 작성하세요..."
         className={styles.textarea}
       />
+
       <button
         onClick={handleSave}
         className={styles.button}

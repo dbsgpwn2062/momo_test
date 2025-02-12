@@ -5,14 +5,18 @@ import Calendar, { CalendarProps } from "react-calendar";
 import styles from "@/styles/Calendar.module.css";
 
 interface CalendarFormProps {
-  onDateSelect: (date: Date) => void; // 메인에서 상태 관리
+  onDateSelect: (date: Date) => void;
+  diaryEntries?: Record<string, any>; // ✅ diaryEntries를 옵셔널로 변경
 }
 
-export default function CalendarForm({ onDateSelect }: CalendarFormProps) {
+export default function CalendarForm({
+  onDateSelect,
+  diaryEntries = {},
+}: CalendarFormProps) {
   const handleDateChange: CalendarProps["onChange"] = (value) => {
     if (value instanceof Date) {
       console.log("📅 선택한 날짜:", value.toDateString());
-      onDateSelect(value); // 부모 컴포넌트(메인)로 날짜 전달
+      onDateSelect(value);
     }
   };
 
@@ -31,6 +35,12 @@ export default function CalendarForm({ onDateSelect }: CalendarFormProps) {
         nextLabel="＞"
         next2Label="≫"
         formatDay={(locale, date) => date.getDate().toString()}
+        tileClassName={({ date }) => {
+          const dateKey = date.toISOString().split("T")[0];
+
+          // ✅ diaryEntries가 undefined이면 빈 객체 `{}`를 사용
+          return diaryEntries?.[dateKey] ? styles.highlight : "";
+        }}
       />
     </div>
   );
