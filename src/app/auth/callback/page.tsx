@@ -54,7 +54,7 @@ export default function AuthCallback() {
         sessionStorage.setItem("refreshToken", tokenData.refresh_token);
         sessionStorage.setItem("userInfo", JSON.stringify(decodedUser)); // 사용자 정보 저장
 
-        router.push("/main");
+        router.push("/home");
       } catch {
         router.push("/login");
       }
