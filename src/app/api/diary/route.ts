@@ -78,3 +78,58 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "서버 오류 발생" }, { status: 500 });
   }
 }
+
+// 일기 삭제
+export async function DELETE(req: NextRequest) {
+  try {
+    const token = getTokenFromCookies(req);
+    if (!token) {
+      console.error("[DELETE] ❌ No ID token found in cookies");
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // ✅ URL에서 `date` 가져오기
+    const { searchParams } = new URL(req.url);
+    const date = searchParams.get("date");
+
+    if (!date) {
+      return NextResponse.json(
+        { error: "Missing date parameter" },
+        { status: 400 }
+      );
+    }
+
+    // ✅ Django API URL 구성 (확실한 URL 형식)
+    const backendUrl = `${API_BASE_URL}/home/calendar/delete/${date}`;
+    console.log(`[DELETE] 🔗 Sending request to backend: ${backendUrl}`);
+
+    const res = await fetch(backendUrl, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error(
+        `[DELETE] ❌ Backend responded with status ${res.status}:`,
+        errorText
+      );
+      return NextResponse.json(
+        { error: "Failed to delete diary entry" },
+        { status: res.status }
+      );
+    }
+
+    const data = await res.json();
+    console.log("[DELETE] ✅ Successfully deleted diary entry:", data);
+    return NextResponse.json(data, { status: 200 });
+  } catch (error) {
+    console.error("[DELETE] ❌ Error deleting diary entry:", error);
+    return NextResponse.json(
+      { error: "Failed to delete diary entry" },
+      { status: 500 }
+    );
+  }
+}
