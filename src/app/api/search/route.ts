@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const q = searchParams.get("q");
+  const page = parseInt(searchParams.get("page") || "0"); // ✅ 페이지 번호 (기본값 0)
 
   if (!q) {
     return NextResponse.json({ error: "Query parameter 'q' is required" }, { status: 400 });
@@ -13,9 +14,14 @@ export async function GET(req: NextRequest) {
   const INDEX = "movies";
   const url = `${ELASTICSEARCH_HOST}/${INDEX}/_search`;
 
+  // ✅ 페이지당 50개씩 로드
+  const PAGE_SIZE = 48;
+  const from = page * PAGE_SIZE;
+
   // ✅ Elasticsearch Query DSL (Title, Genre, Platform, Synopsis)
   const query = {
-    size: 50,
+    size: PAGE_SIZE,
+    from: from,  // ✅ 몇 번째 데이터부터 가져올지 설정
     query: {
       multi_match: {
         query: q,
@@ -30,8 +36,8 @@ export async function GET(req: NextRequest) {
   };
 
   try {
-    console.log("🔄 Sending request to:", url);  // ✅ 요청 URL 로그
-    console.log("📦 Query:", JSON.stringify(query, null, 2));  // ✅ Elasticsearch Query DSL 로그
+    console.log("🔄 Sending request to:", url);
+    console.log("📦 Query:", JSON.stringify(query, null, 2));
 
     const response = await fetch(url, {
       method: "POST",
@@ -48,7 +54,7 @@ export async function GET(req: NextRequest) {
     }
 
     const data = await response.json();
-    console.log("✅ Response from Elasticsearch:", JSON.stringify(data, null, 2));  // ✅ 응답 데이터 확인 로그
+    console.log("✅ Response from Elasticsearch:", JSON.stringify(data, null, 2));
     return NextResponse.json(data);
   } catch (error) {
     console.error("🚨 Elasticsearch Request Failed:", error);

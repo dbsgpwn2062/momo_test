@@ -1,0 +1,159 @@
+/* 🌟 메인 컨테이너 (전체 화면 배경 적용) */
+.main-container {
+    display: flex;
+    height: 100vh;
+    background-image: url("/unicorn-pastel-phone-wallpaper-background.jpg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+
+
+/* 🌟 챗봇 전체 */
+.chatbot {
+    width: 200%;
+    max-width: 450px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* 🌟 챗봇 헤더 */
+.chat-header {
+    background: #ff6b81;
+    color: white;
+    padding: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    position: relative; /* ✅ 부모 기준 위치 설정 */
+    display: flex;
+    justify-content: center; /* ✅ 가운데 정렬 */
+    align-items: center;
+}
+
+/* 🌟 챗봇 제목 (가운데 정렬) */
+.chat-title {
+    flex-grow: 1; /* ✅ 공간을 차지하여 가운데 배치 */
+    text-align: center;
+}
+
+/* 🌟 닫기 버튼 (헤더 오른쪽) */
+.chatbot-close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    position: absolute;
+    right: 15px; /* ✅ 헤더 오른쪽 끝에 배치 */
+}
+
+
+
+/* 🌟 메시지 리스트 */
+.chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 🌟 메시지 공통 */
+.chat-message-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* 🌟 momo.png 아이콘 (챗봇 메시지 왼쪽) */
+.message-momo {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+/* 🌟 메시지 스타일 */
+.chat-message {
+    max-width: 75%;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 16px;
+    word-wrap: break-word;
+}
+
+/* 🌟 유저 메시지 (오른쪽 배치) */
+.chat-message-container.user {
+    justify-content: flex-end;
+}
+
+.chat-message.user {
+    background-color: #ff6b81;
+    color: white;
+    border-bottom-right-radius: 2px;
+    align-self: flex-end;
+    text-align: right;
+}
+
+/* 🌟 챗봇 메시지 (왼쪽 배치) */
+.chat-message-container.bot {
+    justify-content: flex-start;
+}
+
+.chat-message.bot {
+    background-color: #ffd3b6;
+    color: black;
+    border-bottom-left-radius: 2px;
+    align-self: flex-start;
+}
+
+/* 🌟 입력 영역 */
+.chat-input {
+    display: flex;
+    padding: 15px;
+    background: white;
+    border-top: 1px solid #ddd;
+}
+
+/* 🌟 입력 필드 */
+.chat-input input {
+    flex-grow: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    background: #f8f9fa;
+    outline: none;
+}
+
+/* 🌟 전송 버튼 */
+.chat-input button {
+    background: #ff6b81;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin-left: 15px;
+    border-radius: 30;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 60px;
+}
+
+.chat-input button:hover {
+    background: #ff4757;
+}
+
+/* 🌟 반응형 스타일 */
+@media (max-width: 600px) {
+    .chatbot {
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+    }
+}
+
+

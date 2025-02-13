@@ -21,25 +21,67 @@ interface Movie {
 export default function MovieGrid({ searchQuery }: { searchQuery: string }) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(false);
-  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null); // ✅ 선택된 영화 정보
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
 
+  const PAGE_SIZE = 48; // ✅ 한 번에 불러오는 데이터 개수
+
+  // 🔄 검색어 변경 시 초기화
   useEffect(() => {
     if (!searchQuery) return;
 
-    setLoading(true);
-    fetch(`/api/search?q=${searchQuery}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setMovies(data.hits.hits || []);
-      })
-      .catch((err) => console.error("Error fetching movies:", err))
-      .finally(() => setLoading(false));
+    setMovies([]);
+    setPage(0);
+    setHasMore(true);
+    fetchMovies(0, true);
   }, [searchQuery]);
 
-  // 팝업 닫기 함수 (배경 클릭 또는 ESC 키)
+  // 📡 API 호출 (무한 스크롤 적용)
+  const fetchMovies = async (pageNum: number, reset: boolean = false) => {
+    if (!hasMore) return;
+    setLoading(true);
+
+    try {
+      const res = await fetch(`/api/search?q=${searchQuery}&page=${pageNum}`);
+      const data = await res.json();
+      const newMovies: Movie[] = data.hits.hits || [];
+
+      setMovies(prev => {
+        const mergedMovies: Movie[] = reset ? newMovies : [...prev, ...newMovies];
+        const uniqueMovies: Movie[] = Array.from(new Map(mergedMovies.map(m => [m._id, m])).values());
+        return uniqueMovies;
+      });
+
+      setHasMore(newMovies.length === PAGE_SIZE);
+      setPage(pageNum + 1); // ✅ 다음 페이지 증가
+    } catch (error) {
+      console.error("Error fetching movies:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 🎢 무한 스크롤 감지 이벤트
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 300
+        && !loading
+        && hasMore
+      ) {
+        fetchMovies(page);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [loading, hasMore]);
+
+  // 🎬 팝업 닫기 함수 (배경 클릭 또는 ESC 키)
   const closePopup = () => setSelectedMovie(null);
 
-  // ESC 키 이벤트 추가
+  // 🛑 ESC 키 이벤트 추가
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === "Escape") closePopup();
@@ -50,28 +92,26 @@ export default function MovieGrid({ searchQuery }: { searchQuery: string }) {
 
   return (
     <div className="movie-container">
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <div className="movie-grid">
-          {movies.length > 0 ? (
-            movies.map((movie) => (
-              <div key={movie._id} className="movie-card" onClick={() => setSelectedMovie(movie)}>
-                {/* 🎬 영화 포스터 */}
-                <img src={movie._source.PosterURL} alt={movie._source.Title} className="movie-poster" />
+      {loading && <p></p>}
 
-                {/* 🎬 영화 제목 */}
-                <h3 className="movie-title">{movie._source.Title}</h3>
+      <div className="movie-grid">
+        {movies.length > 0 ? (
+          movies.map((movie) => (
+            <div key={movie._id} className="movie-card" onClick={() => setSelectedMovie(movie)}>
+              {/* 🎬 영화 포스터 */}
+              <img src={movie._source.PosterURL} alt={movie._source.Title} className="movie-poster" />
 
-                {/* 🏷️ 플랫폼 정보 */}
-                <p className="movie-platform">{movie._source.Platform}</p>
-              </div>
-            ))
-          ) : (
-            <p>No results found.</p>
-          )}
-        </div>
-      )}
+              {/* 🎬 영화 제목 */}
+              <h3 className="movie-title">{movie._source.Title}</h3>
+
+              {/* 🏷️ 플랫폼 정보 */}
+              <p className="movie-platform">{movie._source.Platform}</p>
+            </div>
+          ))
+        ) : (
+          <p>검색 결과 없음</p>
+        )}
+      </div>
 
       {/* 🎬 영화 상세 팝업 */}
       {selectedMovie && (

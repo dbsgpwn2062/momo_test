@@ -3,6 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import "@/styles/statistics.css"; // ✅ CSS 적용
 import Image from "next/image";
+import { Bar } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 // 감정별 이모지 맵핑
 const EMOTION_ICONS: { [key: string]: string } = {
@@ -50,6 +54,37 @@ export default function StatisticsPage() {
         { emotion: "confusion", title: "혼란스러운 콘텐츠 순위", movies: ["이해하기 어려운 영화", "복잡한 플롯", "미스터리 스릴러", "반전 영화", "다중 시점 영화", "논리적 사고 도전", "꿈속 같은 이야기", "퍼즐 같은 플롯", "시간 여행 영화", "철학적인 스토리"] },
     ];
 
+    const personalStats = [
+        { name: "행복", count: 30 },
+        { name: "설렘", count: 20 },
+        { name: "화남", count: 10 },
+        { name: "슬픔", count: 15 },
+        { name: "공포", count: 12 },
+        { name: "부끄러움", count: 8 },
+        { name: "혼란", count: 5 },
+    ];
+    
+    const monthlyStats = [
+        { month: "1월", count: 100 },
+        { month: "2월", count: 90 },
+        { month: "3월", count: 120 },
+        { month: "4월", count: 80 },
+        { month: "5월", count: 130 },
+    ];
+    
+    const totalStats = personalStats.map(stat => ({ name: stat.name, value: stat.count }));
+    
+    const renderChart = (labels: string[], data: number[], label: string) => (
+        <Bar data={{
+            labels,
+            datasets: [{
+                label,
+                data,
+                backgroundColor: "rgba(75, 192, 192, 0.6)"
+            }]
+        }} />
+    );
+
     // ✅ 선택한 통계 유형에 따라 데이터 변경
     const renderStatistics = () => {
         if (selectedType === "감정별 통계") {
@@ -94,8 +129,12 @@ export default function StatisticsPage() {
                     </div>
                 </div>
             );
-        } else {
-            return <div className="statistics-content">{selectedType} 데이터 표시</div>;
+        } else if (selectedType === "개인 통계") {
+            return renderChart(personalStats.map(stat => stat.name), personalStats.map(stat => stat.count), "개인 감정 사용 횟수");
+        } else if (selectedType === "월별 통계") {
+            return renderChart(monthlyStats.map(stat => stat.month), monthlyStats.map(stat => stat.count), "월별 감정 사용 횟수");
+        } else if (selectedType === "전체 통계") {
+            return renderChart(totalStats.map(stat => stat.name), totalStats.map(stat => stat.value), "전체 감정 사용 횟수");
         }
     };
 
