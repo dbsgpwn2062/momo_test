@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Calendar, { CalendarProps } from "react-calendar";
-import styles from "@/styles/Calendar.module.css";
 import dayjs from "dayjs";
 
 interface CalendarFormProps {
@@ -37,11 +36,13 @@ export default function CalendarForm({
   };
 
   return (
-    <div className={styles.calendarContainer}>
+    <div className="calendarContainer">
+      {" "}
+      {/* ✅ 전역 CSS 적용 */}
       <Calendar
         onChange={handleDateChange}
         onActiveStartDateChange={handleActiveStartDateChange}
-        className={styles.reactCalendar}
+        className={"react-calendar"}
         locale="ko-KR"
         calendarType="gregory"
         formatShortWeekday={(locale, date) =>
@@ -54,7 +55,7 @@ export default function CalendarForm({
         formatDay={(locale, date) => date.getDate().toString()}
         tileClassName={({ date }) => {
           const dateKey = dayjs(date).format("YYYY-MM-DD");
-          return diaryEntries?.[dateKey] ? styles.highlight : ""; // ✅ 작성 완료된 날짜만 강조
+          return diaryEntries?.[dateKey] ? "highlight" : ""; // ✅ 전역 CSS 적용
         }}
       />
     </div>

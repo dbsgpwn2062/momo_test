@@ -89,7 +89,7 @@ export default function DiaryForm({
       const idToken = sessionStorage.getItem("idToken");
       if (!idToken) {
         alert("로그인이 필요합니다.");
-        router.push("/login");
+        router.push("/home");
         return;
       }
 

@@ -3,6 +3,16 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
   background-color: #ffffff;
+  padding-top: 64px;
+}
+
+.contentWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center; /* ✅ 중앙 정렬 */
+  gap: 100px; /* 캘린더와 사이드바 사이 여백 */
+  margin-top: 20px;
+  width: 100%;
 }

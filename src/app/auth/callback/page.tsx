@@ -13,7 +13,7 @@ export default function AuthCallback() {
       const code = query.get("code");
 
       if (!code) {
-        router.push("/login");
+        router.push("/home");
         return;
       }
 
@@ -56,7 +56,7 @@ export default function AuthCallback() {
 
         router.push("/home");
       } catch {
-        router.push("/login");
+        router.push("/home");
       }
     };
 

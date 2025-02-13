@@ -49,13 +49,26 @@ body {
   font-family: "Ryupig", sans-serif;
 }
 
+/*--------헤더----------*/
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #1f2937;
+  color: white;
+  padding: 1rem;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* ✅ 모든 요소 위에 배치 */
+}
+
 /* -----캘린더 스타일---- */
 .react-calendar {
   font-family: "Ryupig", sans-serif;
   font-weight: 1500;
   width: 100%;
   max-width: 900px;
-  background: white;
+  background: rgb(255, 255, 255);
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
@@ -113,8 +126,7 @@ body {
   display: inline-block; /* 테두리 적용을 위해 inline-block으로 변경 */
   border: 2px;
   border-radius: 50%; /* 동그랗게 테두리 */
-  padding: 5px; /* 숫자 주위 공간 확보 */
-  margin: 2px; /* 추가 여백 */
+  padding: 3px; /* 숫자 주위 공간 확보 */
 }
 
 /* 이전/다음 달 날짜 흐리게 */
@@ -228,7 +240,7 @@ body {
 .react-calendar__tile--now {
   background: none !important; /* 기존 배경 제거 */
   color: inherit !important; /* 다른 날짜와 동일한 색상 유지 */
-  border-radius: 0 !important;
+  border-radius: 5px !important;
   position: relative;
 }
 
@@ -257,20 +269,17 @@ body {
 
 /* 작성 완료된 날짜 스타일 */
 .highlight {
-  background-color: #a855f7 !important; /* ✅ 보라색 */
-  color: white !important;
-  border-radius: 50%; /* ✅ 동그랗게 */
-  font-weight: bold;
-  text-align: center;
+  position: relative;
+  color: black;
 }
 
 /* 오른쪽 하단에 작은 원으로 표시 */
 .highlight::after {
-  content: "✔"; /* ✅ 체크마크 아이콘 */
+  content: "작성완료 ✔"; /* ✅ 체크마크 아이콘 */
   position: absolute;
   bottom: 2px; /* ✅ 오른쪽 하단 정렬 */
   right: 2px;
-  font-size: 12px; /* ✅ 크기 조절 */
+  font-size: 15px; /* ✅ 크기 조절 */
   color: purple; /* ✅ 보라색 */
   font-weight: bold;
 }

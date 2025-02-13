@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import CalendarForm from "@/components/mainForm/CalendarForm";
 import DiaryForm from "@/components/mainForm/DiaryForm";
 import ReadDiary from "@/components/mainForm/ReadDiary";
+import Header from "@/components/ui/Header";
+import Sidebar from "@/components/mainForm/chart";
+import SearchBar from "@/components/ui/SearchBar"; // ✅ 검색바 추가
 import styles from "@/styles/MainForm.module.css";
 import dayjs from "dayjs";
 
@@ -99,12 +102,25 @@ export default function MainPage() {
 
   return (
     <div className={styles.mainContainer}>
-      <CalendarForm
-        onDateSelect={setSelectedDate}
-        onMonthChange={fetchMonthData}
-        diaryEntries={diaryEntries}
-      />
+      {/* ✅ 헤더 추가 (고정) */}
+      <Header />
 
+      <div className={styles.contentWrapper}>
+        {/* 캘린더 */}
+        <CalendarForm
+          onDateSelect={setSelectedDate}
+          onMonthChange={fetchMonthData}
+          diaryEntries={diaryEntries}
+        />
+
+        {/* ✅ 사이드바 (검색바 추가) */}
+        <div className={styles.sidebarContainer}>
+          <SearchBar /> {/* ✅ 검색바 추가 */}
+          <Sidebar />
+        </div>
+      </div>
+
+      {/* 일기 폼 또는 읽기 전용 일기 */}
       {isDiaryOpen &&
         selectedDate !== null &&
         (diaryData ? (
