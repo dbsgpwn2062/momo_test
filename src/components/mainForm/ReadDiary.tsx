@@ -6,14 +6,22 @@ import { useState } from "react";
 interface ReadDiaryProps {
   diaryData: any;
   onClose: () => void;
+  onDeleteSuccess?: (date: string) => void;
 }
 
-export default function ReadDiary({ diaryData, onClose }: ReadDiaryProps) {
+export default function ReadDiary({
+  diaryData,
+  onClose,
+  onDeleteSuccess = () => {},
+}: ReadDiaryProps) {
   const [loading, setLoading] = useState(false);
+  const [isChecked, setIsChecked] = useState(false); // ✅ 체크박스 상태 추가
+  const [showPopup, setShowPopup] = useState(false);
+  const [recommendation, setRecommendation] = useState("");
 
-  // ✅ 삭제 요청 함수 추가
-  const handleDelete = async () => {
-    if (!diaryData.date) {
+  // ✅ 삭제 요청 함수
+  const handleDelete = async (date: string) => {
+    if (!date) {
       alert("삭제할 일기 날짜가 없습니다.");
       return;
     }
@@ -23,7 +31,8 @@ export default function ReadDiary({ diaryData, onClose }: ReadDiaryProps) {
 
     setLoading(true);
     try {
-      const res = await fetch(`/api/diary?date=${diaryData.date}`, {
+      console.log("[DELETE] 요청 보냄: ", date);
+      const res = await fetch(`/api/diary?date=${date}`, {
         method: "DELETE",
       });
 
@@ -31,10 +40,44 @@ export default function ReadDiary({ diaryData, onClose }: ReadDiaryProps) {
       if (!res.ok) throw new Error(result.error || "삭제 실패");
 
       alert("일기가 성공적으로 삭제되었습니다.");
-      onClose(); // ✅ 다이어리 닫기
+      onDeleteSuccess(date);
+      onClose();
     } catch (error) {
       console.error("삭제 실패:", error);
       alert("일기 삭제 중 오류가 발생했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ✅ 콘텐츠 추천 API 호출 함수
+  const handleRecommend = async () => {
+    if (!diaryData?.date) {
+      alert("날짜 정보가 없습니다.");
+      return;
+    }
+
+    const requestBody = {
+      date: diaryData.date,
+      type: isChecked ? "sub" : "all", // ✅ 체크박스 상태에 따라 타입 결정
+    };
+
+    try {
+      setLoading(true);
+      const res = await fetch("/api/recommend", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestBody),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "추천 실패");
+
+      setRecommendation(data.bedrock_response); // ✅ 추천 결과 저장
+      setShowPopup(true); // ✅ 팝업 띄우기
+    } catch (error) {
+      console.error("추천 실패:", error);
+      alert("콘텐츠 추천 중 오류가 발생했습니다.");
     } finally {
       setLoading(false);
     }
@@ -66,22 +109,41 @@ export default function ReadDiary({ diaryData, onClose }: ReadDiaryProps) {
         <strong>내용:</strong> {diaryData.diary || "기록 없음"}
       </p>
 
-      {/* ✅ 삭제 버튼 추가 */}
+      {/* ✅ 체크박스 추가 */}
+      <div className={styles.checkboxContainer}>
+        <label>
+          <input
+            type="checkbox"
+            checked={isChecked}
+            onChange={(e) => setIsChecked(e.target.checked)}
+          />
+          구독하고 있는 플랫폼에서만 추천받기
+        </label>
+      </div>
+
+      {/* ✅ 삭제 & 추천 버튼 */}
       <div className={styles.diaryButtons}>
         <button
           className={`${styles.diaryButton} ${styles.deleteButton}`}
-          onClick={handleDelete}
-          disabled={loading}
+          onClick={() => handleDelete(diaryData.date)}
         >
-          {loading ? "삭제 중..." : "🗑 기록 삭제"}
+          🗑 기록 삭제
         </button>
         <button
           className={`${styles.diaryButton} ${styles.recommendButton}`}
-          onClick={() => alert("OTT 추천 기능 준비 중!")}
+          onClick={handleRecommend}
         >
           🎥 OTT 추천받기
         </button>
       </div>
+
+      {/* ✅ 추천 결과 팝업 */}
+      {showPopup && (
+        <div className={styles.popup}>
+          <p>{recommendation}</p>
+          <button onClick={() => setShowPopup(false)}>닫기</button>
+        </div>
+      )}
     </div>
   );
 }

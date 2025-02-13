@@ -1,12 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { saveDiaryData } from "@/services/diary";
 import styles from "@/styles/DiaryForm.module.css";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
-import EmojiPicker from "@/components/mainForm/EmojiPicker"; // ✅ 다시 추가
+import EmojiPicker from "@/components/mainForm/EmojiPicker";
 import { emojiMappings } from "@../../utils/emojiMappings";
 
 // ✅ 이모지 변환 함수
@@ -15,19 +14,18 @@ const convertToTextArray = (emojiList: string[]): string[] => {
 };
 
 interface DiaryFormProps {
-  date: Date | null;
+  date: Date;
   diaryData: any;
   onClose: () => void;
-  onSave: () => Promise<void>;
+  onSave?: () => void;
 }
 
 export default function DiaryForm({
   date,
   diaryData,
   onClose,
-  onSave,
+  onSave = () => {},
 }: DiaryFormProps) {
-  const router = useRouter();
   const [diary, setDiary] = useState("");
   const [selectedWeather, setSelectedWeather] = useState("");
   const [selectedEmojis, setSelectedEmojis] = useState<string[]>([]);
@@ -40,7 +38,7 @@ export default function DiaryForm({
     ? dayjs(date).locale("ko").format("YYYY년 M월 D일 dddd")
     : "날짜 선택 안됨";
 
-  // ✅ GET 데이터 적용
+  // ✅ 기존 데이터 불러와서 세팅
   useEffect(() => {
     if (diaryData) {
       setDiary(diaryData.diary || "");
@@ -87,7 +85,7 @@ export default function DiaryForm({
     try {
       await saveDiaryData(payload);
       alert("일기가 성공적으로 저장되었습니다!");
-      await onSave();
+      await onSave(); // ✅ 저장 후 캘린더 즉시 반영
     } catch (error) {
       alert("저장 중 오류가 발생했습니다.");
     } finally {
@@ -102,7 +100,7 @@ export default function DiaryForm({
       </button>
       <h2>{formattedDate}</h2>
 
-      {/* ✅ EmojiPicker 다시 추가 */}
+      {/* ✅ 이모지 선택 UI */}
       <EmojiPicker
         title="날씨"
         type="weather"

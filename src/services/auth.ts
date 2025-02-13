@@ -9,11 +9,25 @@ export const COGNITO_LOGIN_URL = `${COGNITO_DOMAIN}/login?client_id=${CLIENT_ID}
 // ✅ Cognito 로그아웃 URL (쿠키 삭제 후 홈으로 이동)
 export const COGNITO_LOGOUT_URL = "/api/auth";
 
-export const clearSession = () => {
-  console.warn("🚨 세션 만료: 쿠키 삭제 및 로그아웃");
-  document.cookie = "idToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  document.cookie =
-    "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+export const clearSession = async () => {
+  console.warn("🚨 세션 만료: 백엔드에 로그아웃 요청");
+
+  try {
+    const response = await fetch("/api/auth/logout", {
+      method: "GET",
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      console.error("❌ 로그아웃 실패:", await response.text());
+      return;
+    }
+
+    console.log("✅ 로그아웃 성공: 쿠키 삭제 완료");
+  } catch (error) {
+    console.error("❌ 로그아웃 요청 중 오류 발생:", error);
+  }
+
   window.location.href = "/home"; // ✅ 홈으로 리디렉트
 };
 
@@ -33,3 +47,8 @@ export const getTokenFromCookies = async (): Promise<string | null> => {
     return null;
   }
 };
+
+export function setTokenCookie(idToken: string, expiresIn: number) {
+  const expires = new Date(Date.now() + expiresIn * 1000).toUTCString();
+  document.cookie = `idToken=${idToken}; Path=/; Expires=${expires}; Secure; HttpOnly; SameSite=Strict`;
+}

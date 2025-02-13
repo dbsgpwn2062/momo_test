@@ -16,7 +16,7 @@ export default function Header() {
   // ✅ 로그인 상태 확인 및 토큰 만료 체크
   const checkAuthStatus = async () => {
     const idToken = await getTokenFromCookies();
-    console.log("🔍 현재 idToken:", idToken); // ✅ 디버깅용 로그
+    console.log("🔍 현재 idToken:", idToken);
 
     if (!idToken) {
       console.warn("❌ 인증되지 않은 사용자");
@@ -25,12 +25,12 @@ export default function Header() {
     }
 
     try {
-      const decodedToken: { exp?: number } = jwtDecode(idToken);
+      const decodedToken: { exp?: number; iat?: number } = jwtDecode(idToken);
       console.log("📅 디코딩된 토큰:", decodedToken);
 
       if (!decodedToken.exp) {
-        console.error("토큰에 exp 필드가 없습니다.");
-        clearSession();
+        console.error("❌ 토큰에 exp 필드가 없음");
+        await clearSession();
         setIsAuthenticated(false);
         setShowLoginPopup(true);
         return;
@@ -39,37 +39,38 @@ export default function Header() {
       const expTime = decodedToken.exp * 1000;
       const currentTime = Date.now();
 
-      console.log("⏳ 토큰 만료 시간:", expTime);
-      console.log("⌛ 현재 시간:", currentTime);
+      console.log("⏳ 토큰 만료 시간 (exp):", new Date(expTime));
+      console.log("⌛ 현재 시간:", new Date(currentTime));
 
       if (currentTime >= expTime) {
         console.warn("🚨 토큰 만료됨. 자동 로그아웃 처리.");
-        clearSession();
+        await clearSession();
         setIsAuthenticated(false);
         setShowLoginPopup(true);
       } else {
+        console.log("✅ 토큰이 유효함.");
         setIsAuthenticated(true);
 
-        // ✅ 남은 시간 후 자동 로그아웃 처리
-        setTimeout(() => {
+        // ✅ 남은 시간 후 자동 로그아웃 및 팝업 표시
+        setTimeout(async () => {
           console.warn("🔄 토큰 만료 시간 도달. 자동 로그아웃.");
-          clearSession();
+          await clearSession();
           setIsAuthenticated(false);
           setShowLoginPopup(true);
         }, expTime - currentTime);
       }
     } catch (error) {
       console.error("❌ 토큰 디코딩 실패:", error);
-      clearSession();
+      await clearSession();
       setIsAuthenticated(false);
       setShowLoginPopup(true);
     }
   };
 
-  // ✅ 로그인 상태 감지 (로그인/로그아웃될 때마다 실행)
+  // ✅ 로그인 상태 감지
   useEffect(() => {
     checkAuthStatus();
-  }, []); // ✅ 처음 페이지 로드될 때 실행
+  }, []);
 
   // ✅ 로그인 함수
   const handleLogin = () => {
@@ -77,10 +78,17 @@ export default function Header() {
   };
 
   // ✅ 로그아웃 함수
-  const handleLogout = () => {
-    clearSession();
+  const handleLogout = async () => {
+    console.log("🛑 로그아웃 버튼 클릭됨!");
+    await clearSession();
     setIsAuthenticated(false);
     router.push("/home");
+  };
+
+  // ✅ 팝업 확인 버튼 클릭 시 로그인 페이지로 이동
+  const handlePopupConfirm = () => {
+    setShowLoginPopup(false);
+    handleLogin();
   };
 
   return (
@@ -106,9 +114,18 @@ export default function Header() {
 
       {/* ✅ 로그인 만료 팝업 */}
       {showLoginPopup && (
-        <div className="popup">
-          <p>로그인 세션이 만료되었습니다. 다시 로그인해주세요.</p>
-          <button onClick={handleLogin}>로그인</button>
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            <p className="text-lg font-semibold mb-4">
+              로그인 세션이 만료되었습니다.
+            </p>
+            <button
+              onClick={handlePopupConfirm}
+              className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+            >
+              확인
+            </button>
+          </div>
         </div>
       )}
     </header>

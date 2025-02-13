@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { serialize, parse } from "cookie";
+import { serialize } from "cookie";
 
 const COGNITO_DOMAIN = process.env.NEXT_PUBLIC_COGNITO_DOMAIN!;
 const CLIENT_ID = process.env.NEXT_PUBLIC_COGNITO_APP_CLIENT_ID!;
 const CLIENT_SECRET = process.env.NEXT_PUBLIC_COGNITO_APP_CLIENT_SECRET!;
 const REDIRECT_URI = process.env.NEXT_PUBLIC_REDIRECT_URI!;
-const LOGOUT_URI = process.env.NEXT_PUBLIC_LOGOUT_URI!;
 
 // ✅ [POST] 로그인 처리 → Cognito에서 토큰 받아와서 쿠키 저장
 export async function POST(req: NextRequest) {
@@ -75,32 +74,4 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-// ✅ [GET] 로그아웃 → 쿠키 삭제 후 로그아웃 페이지로 이동
-export async function GET() {
-  const response = NextResponse.redirect(LOGOUT_URI);
-
-  // ✅ 토큰 삭제
-  response.headers.append(
-    "Set-Cookie",
-    serialize("accessToken", "", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      maxAge: 0,
-    })
-  );
-
-  response.headers.append(
-    "Set-Cookie",
-    serialize("idToken", "", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      maxAge: 0,
-    })
-  );
-
-  return response;
 }
