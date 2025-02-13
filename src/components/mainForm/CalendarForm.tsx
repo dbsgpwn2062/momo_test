@@ -41,7 +41,7 @@ export default function CalendarForm({
       {/* ✅ 전역 CSS 적용 */}
       <Calendar
         onChange={handleDateChange}
-        onActiveStartDateChange={handleActiveStartDateChange}
+        onActiveStartDateChange={handleActiveStartDateChange} // ✅ 월 변경 감지
         className={"react-calendar"}
         locale="ko-KR"
         calendarType="gregory"
@@ -55,7 +55,7 @@ export default function CalendarForm({
         formatDay={(locale, date) => date.getDate().toString()}
         tileClassName={({ date }) => {
           const dateKey = dayjs(date).format("YYYY-MM-DD");
-          return diaryEntries?.[dateKey] ? "highlight" : ""; // ✅ 전역 CSS 적용
+          return diaryEntries?.[dateKey] ? "highlight" : ""; // ✅ 작성된 일기 강조 표시
         }}
       />
     </div>

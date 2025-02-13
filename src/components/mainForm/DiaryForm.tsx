@@ -2,13 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { saveDiaryData } from "@/services/diary";
 import styles from "@/styles/DiaryForm.module.css";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
-import EmojiPicker from "@/components/mainForm/EmojiPicker";
+import EmojiPicker from "@/components/mainForm/EmojiPicker"; // ✅ 다시 추가
 import { emojiMappings } from "@../../utils/emojiMappings";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 // ✅ 이모지 변환 함수
 const convertToTextArray = (emojiList: string[]): string[] => {
@@ -86,26 +85,7 @@ export default function DiaryForm({
     setIsSaving(true);
 
     try {
-      const idToken = sessionStorage.getItem("idToken");
-      if (!idToken) {
-        alert("로그인이 필요합니다.");
-        router.push("/home");
-        return;
-      }
-
-      const response = await fetch(`${API_BASE_URL}/home/calendar/write`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${idToken}`,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        throw new Error("저장 실패");
-      }
-
+      await saveDiaryData(payload);
       alert("일기가 성공적으로 저장되었습니다!");
       await onSave();
     } catch (error) {
@@ -122,6 +102,7 @@ export default function DiaryForm({
       </button>
       <h2>{formattedDate}</h2>
 
+      {/* ✅ EmojiPicker 다시 추가 */}
       <EmojiPicker
         title="날씨"
         type="weather"
