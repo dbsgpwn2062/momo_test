@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.744.0",
     "amazon-cognito-identity-js": "^6.3.12",
     "chart.js": "^4.4.7",
     "dayjs": "^1.11.13",

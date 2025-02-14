@@ -8,12 +8,10 @@
     background-size: cover;
 }
 
-
 /* 🌟 챗봇 전체 */
 .chatbot {
-    width: 200%;
-    max-width: 450px;
-    height: 600px;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     background: #fff;
@@ -52,9 +50,48 @@
     right: 15px; /* ✅ 헤더 오른쪽 끝에 배치 */
 }
 
+/* 🌟 카테고리 버튼 컨테이너 */
+.chat-category-container {
+    display: flex;
+    justify-content: center; /* ✅ 버튼을 중앙 정렬 */
+    gap: 10px; /* ✅ 버튼 간격 */
+    padding: 10px 0;
+    flex-wrap: nowrap; /* ✅ 버튼이 여러 줄로 내려가지 않도록 */
+}
+
+/* 🌟 카테고리 버튼 */
+.chat-category-button {
+    background-color: #ff6b81;
+    color: white;
+    border: none;
+    padding: 11px 15px; /* ✅ 버튼 크기 일정 유지 */
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+    min-width: 125px; /* ✅ 최소 버튼 크기 고정 */
+    text-align: center; /* ✅ 텍스트 중앙 정렬 */
+}
+
+.chat-category-button:hover {
+    background: #ff4757;
+}
+
+/* ✅ 반응형 대응 (모바일) */
+@media (max-width: 600px) {
+    .chat-category-container {
+        flex-wrap: wrap; /* ✅ 작은 화면에서는 자동 줄 바꿈 */
+        justify-content: center;
+    }
+
+    .chat-category-button {
+        min-width: 120px; /* ✅ 작은 화면에서 버튼 크기 조정 */
+    }
+}
 
 
-/* 🌟 메시지 리스트 */
+
+/* 🌟 메시지 리스트 (카테고리 버튼 위쪽에 배치) */
 .chat-messages {
     flex-grow: 1;
     overflow-y: auto;
@@ -62,6 +99,8 @@
     display: flex;
     flex-direction: column;
 }
+
+
 
 /* 🌟 메시지 공통 */
 .chat-message-container {
@@ -137,7 +176,7 @@
     border: none;
     padding: 10px;
     margin-left: 15px;
-    border-radius: 30;
+    border-radius: 30px;
     cursor: pointer;
     transition: 0.3s;
     width: 60px;
@@ -155,5 +194,3 @@
         border-radius: 0;
     }
 }
-
-

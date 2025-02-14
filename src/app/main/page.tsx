@@ -46,12 +46,13 @@ export default function MainPage() {
       )}
 
       {/* ✅ momo.png 버튼 (말풍선) */}
-      <button className={styles.chatbotButton} onClick={() => setIsChatbotOpen(true)}>
-        <div className={styles.chatbotBubble}>
-          <Image src="/momo.png" alt="Chatbot" width={50} height={50} />
-        </div>
-        <span className={styles.chatbotText}>momo chat</span>
-      </button>
+<button className={styles.chatbotButton} onClick={() => setIsChatbotOpen(true)}>
+  <div className={styles.chatbotBubble}>
+    <div className={styles.chatbotTail}></div> {/* ✅ 말풍선 꼬리 추가 */}
+    <Image src="/momo.png" alt="Chatbot" width={50} height={50} />
+  </div>
+  <span className={styles.chatbotText}>momo chat</span>
+</button>
 
       {/* ✅ 챗봇 팝업 (momo 스타일 적용) */}
       {isChatbotOpen && (
