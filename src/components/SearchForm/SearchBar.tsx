@@ -1,34 +1,32 @@
 "use client";
 
 import { useState } from "react";
-import styles from "@/styles/Search.module.css"; // ✅ CSS 모듈 적용
+import { useRouter } from "next/navigation"; // ✅ 페이지 이동을 위한 useRouter 추가
+import "@/styles/search.css";
 
-export default function SearchBar({
-  onSearch,
-}: {
-  onSearch: (query: string) => void;
-}) {
+export default function SearchBar() {
   const [query, setQuery] = useState("");
+  const router = useRouter(); // ✅ Next.js 라우터
 
-  // ✅ 검색 실행 함수
+  // ✅ 검색 실행 함수 (페이지 이동)
   const handleSearch = () => {
     if (query.trim()) {
-      onSearch(query);
+      router.push(`/search?q=${encodeURIComponent(query)}`); // ✅ URL로 이동
     }
   };
 
   return (
-    <div className={styles.searchWrapper}>
-      <div className={styles.searchContainer}>
+    <div className="search-wrapper">
+      <div className="search-container">
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search Movie Title ..."
-          className={styles.searchInput}
-          onKeyDown={(e) => e.key === "Enter" && handleSearch()} // ✅ Enter 키 검색 추가
+          className="search-input"
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()} // ✅ Enter 키 입력 처리
         />
-        <button onClick={handleSearch} className={styles.searchBtn}>
+        <button onClick={handleSearch} className="search-btn">
           Search
         </button>
       </div>

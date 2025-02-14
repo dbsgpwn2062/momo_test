@@ -1,23 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation"; // ✅ URL에서 검색어 가져오기
 import SearchBar from "@/components/SearchForm/SearchBar";
 import MovieGrid from "@/components/SearchForm/MovieGrid";
-import styles from "@/styles/Search.module.css"; // ✅ CSS 모듈 적용
+import "@/styles/search.css";
 
 export default function MovieSearchPage() {
+  const searchParams = useSearchParams(); // ✅ URL에서 `q` 가져오기
   const [searchQuery, setSearchQuery] = useState("");
 
+  // ✅ URL의 검색어를 가져와 검색 실행
+  useEffect(() => {
+    const query = searchParams.get("q"); // ✅ `q` 값 가져오기
+    if (query) {
+      setSearchQuery(query);
+    }
+  }, [searchParams]); // ✅ `searchParams` 변경될 때마다 실행
+
   return (
-    <div className={styles.container}>
-      {" "}
-      {/* ✅ 스타일 적용 */}
-      <SearchBar onSearch={setSearchQuery} />
-      {searchQuery ? (
-        <MovieGrid searchQuery={searchQuery} />
-      ) : (
-        <p className={styles.noResults}>🎬 영화를 검색해주세요!</p> // ✅ 검색 전 메시지 추가
-      )}
+    <div className="searchPage">
+      <SearchBar />
+      <MovieGrid searchQuery={searchQuery} />
     </div>
   );
 }
