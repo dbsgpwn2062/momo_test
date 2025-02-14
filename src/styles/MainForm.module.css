@@ -1,7 +1,7 @@
 .mainContainer {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
   background-color: #ffffff;
   padding-top: 64px;
@@ -12,7 +12,97 @@
   flex-direction: row;
   align-items: center;
   justify-content: center; /* ✅ 중앙 정렬 */
-  gap: 100px; /* 캘린더와 사이드바 사이 여백 */
+  gap: 10%; /* 캘린더와 사이드바 사이 여백 */
   margin-top: 20px;
   width: 100%;
+  height: 100%;
+}
+
+.chatbotButton {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+}
+/* :별2: 말풍선 스타일 */
+.chatbotBubble {
+  width: 80px; /* :흰색_확인_표시: 버튼 크기 */
+  height: 80px;
+  background: white;
+  border: 3px solid #3a3a3a; /* :흰색_확인_표시: 테두리 */
+  border-radius: 20px; /* :흰색_확인_표시: 둥근 모서리 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+/* :흰색_확인_표시: 말풍선 꼬리 */
+.chatbotTail {
+  position: absolute;
+  bottom: -15px;
+  left: 15px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 15px solid white;
+  border-bottom: none;
+  transform: rotate(10deg);
+}
+/* :별2: 챗봇 텍스트 */
+.chatbotText {
+  font-size: 12px;
+  font-weight: bold;
+  color: #3a3a3a;
+  text-align: center;
+}
+/* :별2: 챗봇 팝업 배경 (오버레이) */
+.chatbotOverlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 50vw; /* :흰색_확인_표시: 전체 화면의 오른쪽 절반 차지 */
+  height: 100vh;
+  display: flex;
+  justify-content: center; /* :흰색_확인_표시: 오른쪽 영역 내에서 중앙 정렬 */
+  align-items: center; /* :흰색_확인_표시: 세로 중앙 정렬 */
+  z-index: 999;
+}
+/* :별2: 챗봇 팝업 창 */
+.chatbotPopup {
+  width: 700px; /* :흰색_확인_표시: 기존 크기 유지 */
+  height: 850px; /* :흰색_확인_표시: 기존 크기 유지 */
+  background: white;
+  border-radius: 20px;
+  box-shadow: -4px 0px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: slideIn 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+}
+/* :별2: 챗봇 팝업 애니메이션 */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+/* :별2: 챗봇 섹션 (팝업과 맞추기) */
+.chatbot-section {
+  flex: 1;
+  display: flex;
+  justify-content: center; /* :흰색_확인_표시: 오른쪽 중앙에 배치 */
+  align-items: center;
+  background: transparent;
 }

@@ -2,8 +2,8 @@
   position: fixed;
   top: 0;
   right: -600px; /* 초기에는 화면 밖에 위치 */
-  width: 600px;
-  height: 100vh;
+  width: 45%;
+  height: 100%;
   background: white;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
   transition: right 0.3s ease-in-out;

@@ -4,9 +4,10 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
-import Button from "@/components/ui/Button";
+import Image from "next/image";
 import { getTokenFromCookies, clearSession } from "@/services/auth";
 import { COGNITO_LOGIN_URL } from "@/services/auth";
+import styles from "@/styles/Header.module.css"; // ✅ CSS 모듈 적용
 
 export default function Header() {
   const router = useRouter();
@@ -92,37 +93,47 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-0 w-full flex justify-between items-center p-4 bg-gray-800 text-white shadow-md">
+    <header className={styles.header}>
+      {/* ✅ 햄버거 버튼 추가 */}
+      <button className={styles.hamburger}>☰</button>
+
+      {/* ✅ 로고 이미지 적용 */}
       <Link href="/home">
-        <h1 className="text-xl font-bold cursor-pointer">MOMO</h1>
+        <Image
+          src="/momologo_textonly.png" // public 폴더에서 자동 참조됨
+          alt="MOMO Logo"
+          width={120} // 적절한 크기로 조정
+          height={40}
+          className={styles.logo}
+        />
       </Link>
-      <nav className="flex gap-4">
+
+      <nav className={styles.nav}>
         {!isAuthenticated ? (
-          <Button
-            text="로그인"
+          <button
             onClick={handleLogin}
-            className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
-          />
+            className={`${styles.button} ${styles.loginButton}`}
+          >
+            로그인
+          </button>
         ) : (
-          <Button
-            text="로그아웃"
+          <button
             onClick={handleLogout}
-            className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded-md"
-          />
+            className={`${styles.button} ${styles.logoutButton}`}
+          >
+            로그아웃
+          </button>
         )}
       </nav>
 
       {/* ✅ 로그인 만료 팝업 */}
       {showLoginPopup && (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+        <div className={styles.popupOverlay}>
+          <div className={styles.popupContainer}>
             <p className="text-lg font-semibold mb-4">
               로그인 세션이 만료되었습니다.
             </p>
-            <button
-              onClick={handlePopupConfirm}
-              className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
-            >
+            <button onClick={handlePopupConfirm} className={styles.popupButton}>
               확인
             </button>
           </div>
