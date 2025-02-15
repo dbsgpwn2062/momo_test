@@ -6,62 +6,52 @@ import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
 import Image from "next/image";
 import { getTokenFromCookies, clearSession } from "@/services/auth";
-import { COGNITO_LOGIN_URL } from "@/services/auth";
-import styles from "@/styles/Header.module.css"; // ✅ CSS 모듈 적용
+import styles from "@/styles/Header.module.css";
+
+// ✅ 환경변수에서 Cognito 로그인 & 로그아웃 경로 가져오기
+const COGNITO_LOGIN_URL =
+  process.env.NEXT_PUBLIC_COGNITO_DOMAIN +
+  `/login?client_id=${process.env.NEXT_PUBLIC_COGNITO_APP_CLIENT_ID}` +
+  `&response_type=code&scope=email+openid+profile` +
+  `&redirect_uri=${process.env.NEXT_PUBLIC_REDIRECT_URI}`;
+
+const COGNITO_LOGOUT_URL =
+  process.env.NEXT_PUBLIC_COGNITO_DOMAIN +
+  `/logout?client_id=${process.env.NEXT_PUBLIC_COGNITO_APP_CLIENT_ID}` +
+  `&logout_uri=${process.env.NEXT_PUBLIC_LOGOUT_URI}`;
+
+const COGNITO_SIGN_UP_URL =
+  process.env.NEXT_PUBLIC_COGNITO_DOMAIN +
+  `/signup?client_id=${process.env.NEXT_PUBLIC_COGNITO_APP_CLIENT_ID}` +
+  `&response_type=code&scope=email+openid+profile` +
+  `&redirect_uri=${process.env.NEXT_PUBLIC_REDIRECT_URI}`;
 
 export default function Header() {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // ✅ 햄버거 메뉴 상태
 
-  // ✅ 로그인 상태 확인 및 토큰 만료 체크
+  // ✅ 로그인 상태 확인
   const checkAuthStatus = async () => {
     const idToken = await getTokenFromCookies();
-    console.log("🔍 현재 idToken:", idToken);
-
     if (!idToken) {
-      console.warn("❌ 인증되지 않은 사용자");
       setIsAuthenticated(false);
       return;
     }
-
     try {
-      const decodedToken: { exp?: number; iat?: number } = jwtDecode(idToken);
-      console.log("📅 디코딩된 토큰:", decodedToken);
-
-      if (!decodedToken.exp) {
-        console.error("❌ 토큰에 exp 필드가 없음");
-        await clearSession();
-        setIsAuthenticated(false);
-        setShowLoginPopup(true);
-        return;
-      }
-
-      const expTime = decodedToken.exp * 1000;
+      const decodedToken: { exp?: number } = jwtDecode(idToken);
+      const expTime = decodedToken.exp ? decodedToken.exp * 1000 : 0;
       const currentTime = Date.now();
 
-      console.log("⏳ 토큰 만료 시간 (exp):", new Date(expTime));
-      console.log("⌛ 현재 시간:", new Date(currentTime));
-
       if (currentTime >= expTime) {
-        console.warn("🚨 토큰 만료됨. 자동 로그아웃 처리.");
         await clearSession();
         setIsAuthenticated(false);
         setShowLoginPopup(true);
       } else {
-        console.log("✅ 토큰이 유효함.");
         setIsAuthenticated(true);
-
-        // ✅ 남은 시간 후 자동 로그아웃 및 팝업 표시
-        setTimeout(async () => {
-          console.warn("🔄 토큰 만료 시간 도달. 자동 로그아웃.");
-          await clearSession();
-          setIsAuthenticated(false);
-          setShowLoginPopup(true);
-        }, expTime - currentTime);
       }
     } catch (error) {
-      console.error("❌ 토큰 디코딩 실패:", error);
       await clearSession();
       setIsAuthenticated(false);
       setShowLoginPopup(true);
@@ -73,57 +63,83 @@ export default function Header() {
     checkAuthStatus();
   }, []);
 
-  // ✅ 로그인 함수
+  // ✅ 로그인 함수 (Cognito 페이지로 이동)
   const handleLogin = () => {
     window.location.href = COGNITO_LOGIN_URL;
   };
 
-  // ✅ 로그아웃 함수
-  const handleLogout = async () => {
-    console.log("🛑 로그아웃 버튼 클릭됨!");
-    await clearSession();
-    setIsAuthenticated(false);
-    router.push("/home");
+  // ✅ 회원가입 함수 (Cognito 페이지로 이동)
+  const handleSignUp = () => {
+    window.location.href = COGNITO_SIGN_UP_URL;
   };
 
-  // ✅ 팝업 확인 버튼 클릭 시 로그인 페이지로 이동
-  const handlePopupConfirm = () => {
-    setShowLoginPopup(false);
-    handleLogin();
+  // ✅ 로그아웃 함수 (Cognito 로그아웃 후 홈으로 이동)
+  const handleLogout = async () => {
+    await clearSession();
+    setIsAuthenticated(false);
+    setIsMenuOpen(false); // 메뉴 닫기
+    window.location.href = COGNITO_LOGOUT_URL; // Cognito 로그아웃 처리
   };
 
   return (
     <header className={styles.header}>
-      {/* ✅ 햄버거 버튼 추가 */}
-      <button className={styles.hamburger}>☰</button>
-
-      {/* ✅ 로고 이미지 적용 */}
+      {/* ✅ 로고 */}
       <Link href="/home">
         <Image
-          src="/momologo_textonly.png" // public 폴더에서 자동 참조됨
+          src="/momologo_textonly.png"
           alt="MOMO Logo"
-          width={120} // 적절한 크기로 조정
+          width={120}
           height={40}
           className={styles.logo}
         />
       </Link>
 
-      <nav className={styles.nav}>
-        {!isAuthenticated ? (
-          <button
-            onClick={handleLogin}
-            className={`${styles.button} ${styles.loginButton}`}
-          >
-            로그인
-          </button>
-        ) : (
-          <button
-            onClick={handleLogout}
-            className={`${styles.button} ${styles.logoutButton}`}
-          >
-            로그아웃
-          </button>
-        )}
+      {/* ✅ 햄버거 버튼 */}
+      <button
+        className={styles.hamburger}
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+      >
+        ☰
+      </button>
+
+      {/* ✅ 슬라이드 메뉴 */}
+      <nav className={`${styles.sidebar} ${isMenuOpen ? styles.open : ""}`}>
+        <button
+          className={styles.closeButton}
+          onClick={() => setIsMenuOpen(false)}
+        >
+          ✖
+        </button>
+        <ul className={styles.menu}>
+          <li>
+            <Link href="/home" onClick={() => setIsMenuOpen(false)}>
+              🏠 홈
+            </Link>
+          </li>
+          <li>
+            <Link href="/search" onClick={() => setIsMenuOpen(false)}>
+              🔍 영화 검색
+            </Link>
+          </li>
+          {isAuthenticated ? (
+            <>
+              <li>
+                <Link href="/profile" onClick={() => setIsMenuOpen(false)}>
+                  👤 회원정보 수정
+                </Link>
+              </li>
+              <li className={styles.logout} onClick={handleLogout}>
+                🚪 로그아웃
+              </li>
+            </>
+          ) : (
+            <li>
+              <button onClick={handleSignUp} className={styles.loginButton}>
+                🔑 회원가입
+              </button>
+            </li>
+          )}
+        </ul>
       </nav>
 
       {/* ✅ 로그인 만료 팝업 */}
@@ -133,7 +149,7 @@ export default function Header() {
             <p className="text-lg font-semibold mb-4">
               로그인 세션이 만료되었습니다.
             </p>
-            <button onClick={handlePopupConfirm} className={styles.popupButton}>
+            <button onClick={handleLogin} className={styles.popupButton}>
               확인
             </button>
           </div>

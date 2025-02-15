@@ -86,7 +86,7 @@ export default function ReadDiary({
   return (
     <div className={`${styles.diaryPanel} ${styles.open}`}>
       <button className={styles.closeButton} onClick={onClose}>
-        ✖ 닫기
+        ✖
       </button>
       <h2>{diaryData.date} 기록된 일기</h2>
 

@@ -1,85 +1,79 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import ProfileView from "@/components/profile/ProfileView";
+import ProfileEdit from "@/components/profile/ProfileEdit";
+import Header from "@/components/ui/Header";
+import { getTokenFromCookies } from "@/services/auth";
+import styles from "@/styles/Profile.module.css";
 
 export default function ProfilePage() {
-  const [mbti, setMbti] = useState("");
-  const [subscribePlatform, setSubscribePlatform] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [userInfo, setUserInfo] = useState({
+    nickname: "",
+    email: "",
+    mbti: "",
+    subscribe_platform: [] as string[],
+  });
 
-  // 페이지 로드 시 회원 정보 가져오기
+  // ✅ 회원정보 가져오기
   useEffect(() => {
     async function fetchUserInfo() {
       try {
+        const idToken = await getTokenFromCookies();
+        if (!idToken) throw new Error("No ID token found");
+
+        const tokenPayload = JSON.parse(atob(idToken.split(".")[1])); // JWT 디코딩
+        const nickname = tokenPayload["nickname"] || "닉네임 없음";
+        const email = tokenPayload["email"] || "이메일 없음";
+
         const res = await fetch("/api/userinfo");
         if (!res.ok) throw new Error("Failed to fetch user info");
 
         const data = await res.json();
-        setMbti(data.mbti || "");
-        setSubscribePlatform(data.subscribe_platform || "");
+        setUserInfo({
+          nickname,
+          email,
+          mbti: data.mbti || "",
+          subscribe_platform:
+            typeof data.subscribe_platform === "string"
+              ? data.subscribe_platform.split(",")
+              : data.subscribe_platform || [],
+        });
       } catch (error) {
-        console.error("Error fetching user info:", error);
-      } finally {
-        setLoading(false);
+        console.error("❌ 회원정보 불러오기 실패:", error);
       }
     }
-
     fetchUserInfo();
-  }, []); // 빈 배열로 설정하여 최초 1회 실행
+  }, []);
 
-  // 사용자 정보 업데이트
-  async function handleUpdate() {
-    setMessage("");
-    try {
-      const res = await fetch("/api/userinfo", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mbti, subscribe_platform: subscribePlatform }),
-      });
-
-      const data = await res.json();
-      setMessage(data.message || "Update failed");
-    } catch (error) {
-      setMessage("An error occurred.");
-      console.error(error);
-    }
-  }
-
-  if (loading) return <p>Loading...</p>;
+  // ✅ 정보 수정 후 반영하는 함수
+  const handleUpdate = (updatedInfo: {
+    mbti: string;
+    subscribe_platform: string[];
+  }) => {
+    setUserInfo((prev) => ({
+      ...prev,
+      mbti: updatedInfo.mbti,
+      subscribe_platform: updatedInfo.subscribe_platform,
+    }));
+    setIsEditing(false); // 저장 후 수정모드 닫기
+  };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-5 border rounded-lg shadow-lg">
-      <h1 className="text-xl font-bold mb-4">회원정보</h1>
-
-      <label className="block mb-2">
-        MBTI:
-        <input
-          type="text"
-          value={mbti}
-          onChange={(e) => setMbti(e.target.value)}
-          className="block w-full mt-1 p-2 border rounded"
-        />
-      </label>
-
-      <label className="block mb-2">
-        구독 플랫폼:
-        <input
-          type="text"
-          value={subscribePlatform}
-          onChange={(e) => setSubscribePlatform(e.target.value)}
-          className="block w-full mt-1 p-2 border rounded"
-        />
-      </label>
-
-      <button
-        onClick={handleUpdate}
-        className="w-full bg-blue-500 text-white py-2 rounded mt-4"
-      >
-        저장하기
-      </button>
-
-      {message && <p className="mt-3 text-center text-green-500">{message}</p>}
+    <div className={styles.mainContainer}>
+      <Header />
+      <div className={styles.container}>
+        {isEditing ? (
+          <ProfileEdit
+            userInfo={userInfo}
+            onUpdate={handleUpdate}
+            onClose={() => setIsEditing(false)}
+          />
+        ) : (
+          <ProfileView userInfo={userInfo} onEdit={() => setIsEditing(true)} />
+        )}
+      </div>
     </div>
   );
 }

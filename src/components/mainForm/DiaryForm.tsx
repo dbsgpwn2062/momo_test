@@ -96,7 +96,7 @@ export default function DiaryForm({
   return (
     <div className={`${styles.diaryPanel} ${styles.open}`}>
       <button className={styles.closeButton} onClick={onClose}>
-        ✖ 닫기
+        ✖
       </button>
       <h2>{formattedDate}</h2>
 
