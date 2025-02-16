@@ -7,6 +7,7 @@
   border-radius: 20px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  z-index: 1000;
 }
 /* :별2: 챗봇 헤더 */
 .chat-header {

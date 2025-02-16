@@ -5,20 +5,20 @@ import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
 import Image from "next/image";
-import { getTokenFromCookies, clearSession } from "@/services/auth";
+import {
+  getTokenFromCookies,
+  clearSession,
+  setUserInfoCookie,
+} from "@/services/auth";
 import styles from "@/styles/Header.module.css";
 
-// ✅ 환경변수에서 Cognito 로그인 & 로그아웃 경로 가져오기
 const COGNITO_LOGIN_URL =
   process.env.NEXT_PUBLIC_COGNITO_DOMAIN +
   `/login?client_id=${process.env.NEXT_PUBLIC_COGNITO_APP_CLIENT_ID}` +
   `&response_type=code&scope=email+openid+profile` +
   `&redirect_uri=${process.env.NEXT_PUBLIC_REDIRECT_URI}`;
 
-const COGNITO_LOGOUT_URL =
-  process.env.NEXT_PUBLIC_COGNITO_DOMAIN +
-  `/logout?client_id=${process.env.NEXT_PUBLIC_COGNITO_APP_CLIENT_ID}` +
-  `&logout_uri=${process.env.NEXT_PUBLIC_LOGOUT_URI}`;
+const COGNITO_LOGOUT_URL = process.env.NEXT_PUBLIC_LOGOUT_URI || "/home";
 
 const COGNITO_SIGN_UP_URL =
   process.env.NEXT_PUBLIC_COGNITO_DOMAIN +
@@ -30,9 +30,8 @@ export default function Header() {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // ✅ 햄버거 메뉴 상태
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // ✅ 로그인 상태 확인
   const checkAuthStatus = async () => {
     const idToken = await getTokenFromCookies();
     if (!idToken) {
@@ -58,27 +57,39 @@ export default function Header() {
     }
   };
 
-  // ✅ 로그인 상태 감지
   useEffect(() => {
     checkAuthStatus();
   }, []);
 
-  // ✅ 로그인 함수 (Cognito 페이지로 이동)
-  const handleLogin = () => {
+  const handleLogin = async () => {
+    console.log("🚀 [handleLogin] 로그인 시작");
+
     window.location.href = COGNITO_LOGIN_URL;
+
+    // 1️⃣ 로그인 후 리디렉트된 페이지에서 idToken 확인
+    setTimeout(async () => {
+      const idToken = await getTokenFromCookies();
+      if (!idToken) {
+        console.warn("❌ [handleLogin] idToken 없음");
+        return;
+      }
+
+      console.log("✅ [handleLogin] idToken 가져옴:", idToken);
+
+      // 2️⃣ 사용자 정보 저장
+      await setUserInfoCookie();
+
+      console.log("✅ [handleLogin] 유저 정보 쿠키 저장 완료!");
+
+      // 3️⃣ 캘린더 API 호cnf
+    }, 1000); // ✅ 1초 대기 후 실행 (비동기 쿠키 저장 반영 고려)
   };
 
-  // ✅ 회원가입 함수 (Cognito 페이지로 이동)
-  const handleSignUp = () => {
-    window.location.href = COGNITO_SIGN_UP_URL;
-  };
-
-  // ✅ 로그아웃 함수 (Cognito 로그아웃 후 홈으로 이동)
   const handleLogout = async () => {
     await clearSession();
     setIsAuthenticated(false);
-    setIsMenuOpen(false); // 메뉴 닫기
-    window.location.href = COGNITO_LOGOUT_URL; // Cognito 로그아웃 처리
+    setIsMenuOpen(false);
+    window.location.href = COGNITO_LOGOUT_URL;
   };
 
   return (
@@ -94,13 +105,26 @@ export default function Header() {
         />
       </Link>
 
-      {/* ✅ 햄버거 버튼 */}
-      <button
-        className={styles.hamburger}
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-      >
-        ☰
-      </button>
+      <div className={styles.rightSection}>
+        {/* ✅ 로그인/로그아웃 버튼 추가 */}
+        {isAuthenticated ? (
+          <button onClick={handleLogout} className={styles.authButton}>
+            로그아웃
+          </button>
+        ) : (
+          <button onClick={handleLogin} className={styles.authButton}>
+            로그인
+          </button>
+        )}
+
+        {/* ✅ 햄버거 버튼 */}
+        <button
+          className={styles.hamburger}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          ☰
+        </button>
+      </div>
 
       {/* ✅ 슬라이드 메뉴 */}
       <nav className={`${styles.sidebar} ${isMenuOpen ? styles.open : ""}`}>
@@ -128,13 +152,10 @@ export default function Header() {
                   👤 회원정보 수정
                 </Link>
               </li>
-              <li className={styles.logout} onClick={handleLogout}>
-                🚪 로그아웃
-              </li>
             </>
           ) : (
             <li>
-              <button onClick={handleSignUp} className={styles.loginButton}>
+              <button onClick={handleLogin} className={styles.loginButton}>
                 🔑 회원가입
               </button>
             </li>

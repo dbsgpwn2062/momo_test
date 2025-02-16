@@ -6,43 +6,59 @@ import styles from "@/styles/EmojiPicker.module.css";
 interface EmojiPickerProps {
   title: string;
   type: "weather" | "emotion" | "daily" | "activity";
-  selected: string | string[]; // ✅ 배열도 허용
+  selected: string | string[];
   onSelect: (emoji: string) => void;
   resetTrigger: number;
 }
 
-// ✅ 이모지 목록 정의
+// ✅ **이모지 목록 정의 (활동 카테고리 변경됨)**
 const emojiData = {
   weather: [
+    "/weather/sun.png",
     "/weather/cloud.png",
+    "/weather/wind.png",
     "/weather/rain.png",
     "/weather/snow.png",
-    "/weather/sun.png",
     "/weather/thunder.png",
-    "/weather/wind.png",
   ],
   emotion: [
+    "/emotion/joy.png",
     "/emotion/happy.png",
-    "/emotion/crying.png",
-    "/emotion/confusion.png",
-    "/emotion/scared.png",
-    "/emotion/shame.png",
+    "/emotion/satisfaction.png",
+    "/emotion/exciting.png",
     "/emotion/love.png",
-    "/emotion/angry.png",
+    "/emotion/frustration.png",
+    "/emotion/annoyance.png",
+    "/emotion/surprise.png",
+    "/emotion/anxiety.png",
+    "/emotion/neutral.png",
+    "/emotion/sadness.png",
+    "/emotion/gloom.png",
   ],
   daily: [
-    "/daily/book.png",
-    "/daily/music.png",
+    "/daily/coffee.png",
     "/daily/meal.png",
-    "/daily/shopping.png",
-    "/daily/studying.png",
+    "/daily/music.png",
+    "/daily/rest.png",
+    "/daily/study.png",
+    "/daily/walk.png",
+    "/daily/win.png",
+    "/daily/work.png",
+    "/daily/dog.png",
+    "/daily/cat.png",
   ],
   activity: [
-    "/activity/dog-walking.png",
-    "/activity/jogging.png",
+    "/activity/drawing.png",
+    "/activity/game.png",
+    "/activity/soccer.png",
+    "/activity/baseball.png",
+    "/activity/golf.png",
     "/activity/movie.png",
-    "/activity/sports.png",
+    "/activity/sing.png",
+    "/activity/bicycle.png",
+    "/activity/swim.png",
     "/activity/travel.png",
+    "/activity/winter_activity.png",
   ],
 };
 
@@ -58,7 +74,6 @@ export default function EmojiPicker({
     selected
   );
 
-  // ✅ 날짜 변경 시 선택 초기화
   useEffect(() => {
     setLocalSelected(type === "weather" ? "" : []);
   }, [resetTrigger]);
@@ -66,17 +81,17 @@ export default function EmojiPicker({
   const handleEmojiClick = (emoji: string) => {
     if (type === "weather") {
       setLocalSelected((prev) => (prev === emoji ? "" : emoji));
-      setTimeout(() => onSelect(emoji === selected ? "" : emoji), 0); // ✅ 비동기 처리
+      setTimeout(() => onSelect(emoji === selected ? "" : emoji), 0);
     } else {
       setLocalSelected((prev) => {
         const prevArray = Array.isArray(prev)
           ? prev
           : prev.split(",").filter(Boolean);
         const newState = prevArray.includes(emoji)
-          ? prevArray.filter((e) => e !== emoji) // 제거
-          : [...prevArray, emoji]; // 추가
+          ? prevArray.filter((e) => e !== emoji)
+          : [...prevArray, emoji];
 
-        setTimeout(() => onSelect(newState.join(",")), 0); // ✅ 비동기 처리
+        setTimeout(() => onSelect(newState.join(",")), 0);
         return newState;
       });
     }
@@ -84,7 +99,7 @@ export default function EmojiPicker({
 
   return (
     <div className={styles.emojiPicker}>
-      <h3>{title}</h3>
+      <h3 className={styles.emojiTitle}>{title}</h3>
       <div className={styles.emojiList}>
         {emojis.map((emoji) => (
           <img

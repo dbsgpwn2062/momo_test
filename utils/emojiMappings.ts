@@ -9,27 +9,43 @@ export const emojiMappings: Record<string, string> = {
   "/weather/wind.png": "바람",
 
   // ✅ 감정
+  "/emotion/sadness.png": "슬픔",
+  "/emotion/satisfaction.png": "만족",
+  "/emotion/frustration.png": "좌절",
+  "/emotion/annoyance.png": "짜증",
+  "/emotion/surprise.png": "놀람",
+  "/emotion/anxiety.png": "불안",
+  "/emotion/joy.png": "기쁨",
   "/emotion/happy.png": "행복",
-  "/emotion/crying.png": "슬픔",
-  "/emotion/confusion.png": "혼란",
-  "/emotion/scared.png": "두려움",
-  "/emotion/shame.png": "수치심",
+  "/emotion/exciting.png": "신남",
   "/emotion/love.png": "사랑",
-  "/emotion/angry.png": "화남",
+  "/emotion/gloom.png": "우울",
+  "/emotion/neutral.png": "평범",
 
-  // ✅ 일상
-  "/daily/book.png": "독서",
-  "/daily/music.png": "음악 감상",
+  // ✅ 일상 (변경 없음)
+  "/daily/cat.png": "고양이",
+  "/daily/coffee.png": "커피",
+  "/daily/dog.png": "강아지",
   "/daily/meal.png": "식사",
-  "/daily/shopping.png": "쇼핑",
-  "/daily/studying.png": "공부",
+  "/daily/music.png": "음악감상",
+  "/daily/rest.png": "휴식",
+  "/daily/study.png": "공부",
+  "/daily/walk.png": "산책",
+  "/daily/win.png": "입상",
+  "/daily/work.png": "업무",
 
-  // ✅ 활동
-  "/activity/dog-walking.png": "강아지 산책",
-  "/activity/jogging.png": "조깅",
-  "/activity/movie.png": "영화",
-  "/activity/sports.png": "운동",
+  // ✅ **활동 (업데이트된 이모지)**
+  "/activity/baseball.png": "야구",
+  "/activity/bicycle.png": "자전거",
+  "/activity/drawing.png": "드로잉",
+  "/activity/game.png": "게임",
+  "/activity/golf.png": "골프",
+  "/activity/movie.png": "영화감상",
+  "/activity/sing.png": "노래",
+  "/activity/soccer.png": "축구",
+  "/activity/swim.png": "수영",
   "/activity/travel.png": "여행",
+  "/activity/winter_activity.png": "겨울활동",
 };
 
 export const convertEmojiToText = (emojiList: string[]): string[] => {

@@ -1,4 +1,8 @@
+import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+
+// ✅ 1시간 (3600초) 동안 유지
+const COOKIE_EXPIRE_TIME = 1 / 24; // 1시간 (1/24일)
 
 // ✅ 환경변수에서 Cognito 설정 불러오기
 const COGNITO_DOMAIN = process.env.NEXT_PUBLIC_COGNITO_DOMAIN!;
@@ -17,22 +21,15 @@ export const clearSession = async () => {
   console.warn("🚨 세션 만료: 백엔드에 로그아웃 요청");
 
   try {
-    const response = await fetch("/api/auth/logout", {
-      method: "GET",
-      credentials: "include",
-    });
+    await fetch("/api/auth/logout", { method: "GET", credentials: "include" });
 
-    if (!response.ok) {
-      console.error("❌ 로그아웃 실패:", await response.text());
-      return;
-    }
+    Cookies.remove("id_token");
+    Cookies.remove("user_info");
 
-    console.log("✅ 로그아웃 성공: 쿠키 삭제 완료");
+    window.location.href = "/home"; // ✅ 홈으로 리디렉트
   } catch (error) {
-    console.error("❌ 로그아웃 요청 중 오류 발생:", error);
+    console.error("❌ 로그아웃 요청 실패:", error);
   }
-
-  window.location.href = "/home"; // ✅ 홈으로 리디렉트
 };
 
 // ✅ 쿠키에서 idToken 가져오기
@@ -65,20 +62,49 @@ interface DecodedToken {
   [key: string]: any; // ✅ 기타 속성 허용
 }
 
-export async function getUserInfo() {
+// ✅ 사용자 정보 쿠키에 저장 (1시간) - 로그인 후 실행
+export const setUserInfoCookie = async (retryCount = 0) => {
   const idToken = await getTokenFromCookies();
-  if (!idToken) return null;
+  if (!idToken) {
+    console.warn(`⚠️ [setUserInfoCookie] idToken 없음 (재시도 ${retryCount})`);
+
+    // 최대 3번까지 재시도 (500ms 간격)
+    if (retryCount < 3) {
+      setTimeout(() => setUserInfoCookie(retryCount + 1), 500);
+    }
+    return;
+  }
 
   try {
-    // ✅ 타입을 명확히 지정하여 디코딩
     const decodedToken: DecodedToken = jwtDecode(idToken);
+    const nickname = decodedToken.nickname || "닉네임 없음";
+    const email = decodedToken.email || "이메일 없음";
 
-    return {
-      nickname: decodedToken.nickname || "닉네임 없음",
-      email: decodedToken.email || "이메일 없음",
-    };
+    const res = await fetch("/api/userinfo");
+    if (!res.ok) throw new Error("❌ 유저 정보 가져오기 실패");
+
+    const userInfo = await res.json();
+
+    // ✅ 쿠키에 1시간 저장
+    Cookies.set(
+      "user_info",
+      JSON.stringify({
+        nickname,
+        email,
+        mbti: userInfo.mbti || "",
+        subscribe_platform: userInfo.subscribe_platform || [],
+      }),
+      { expires: COOKIE_EXPIRE_TIME }
+    );
+
+    console.log("✅ [setUserInfoCookie] 유저 정보 쿠키 저장 완료!");
   } catch (error) {
-    console.error("❌ 토큰 디코딩 실패:", error);
-    return null;
+    console.error("❌ 유저 정보 저장 실패:", error);
   }
-}
+};
+
+// ✅ 쿠키에서 유저 정보 가져오기
+export const getUserInfoFromCookies = () => {
+  const userInfo = Cookies.get("user_info");
+  return userInfo ? JSON.parse(userInfo) : null;
+};

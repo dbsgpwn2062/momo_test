@@ -13,7 +13,7 @@ export default function Chatbot({ onClose }: ChatbotProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 1,
-      text: "안녕하세요! momo입니다 :미소짓는_상기된_얼굴: 무엇을 도와드릴까요?",
+      text: "안녕하세요! momo입니다 😊 무엇을 도와드릴까요?",
       sender: "bot",
     },
   ]);
@@ -22,10 +22,10 @@ export default function Chatbot({ onClose }: ChatbotProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   // :흰색_확인_표시: 카테고리 버튼 목록
   const categories = [
-    { id: "ending", text: ":클래퍼: 결말해석" },
-    { id: "genre", text: ":공연: 장르별 영화" },
-    { id: "character", text: ":말하고_있는_머리_그림자: 등장인물" },
-    { id: "guide", text: ":펼쳐진_책: 간단 앱 설명서" },
+    { id: "ending", text: "🎬 결말해석" },
+    { id: "genre", text: "🎭 장르별 영화" },
+    { id: "character", text: "🗣️ 등장인물" },
+    { id: "guide", text: "📖 간단 앱 설명서" },
   ];
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -46,7 +46,7 @@ export default function Chatbot({ onClose }: ChatbotProps) {
       return data.response || "응답을 받을 수 없습니다.";
     } catch (error) {
       console.error(":x: Next.js API 호출 오류:", error);
-      return "죄송합니다. 응답을 가져올 수 없습니다. :울다:";
+      return "죄송합니다. 응답을 가져올 수 없습니다. 😢";
     } finally {
       setLoading(false);
     }
@@ -73,16 +73,16 @@ export default function Chatbot({ onClose }: ChatbotProps) {
         <span className="chat-title">momo-chat</span>
         {onClose && (
           <button className="chatbot-close-btn" onClick={onClose}>
-            :두꺼운_곱셈_기호:
+            ❌
           </button>
         )}
       </div>
       {/* :흰색_확인_표시: 첫 메시지와 카테고리를 함께 감싸는 컨테이너 */}
       <div className="chat-first-container">
         <div className="chat-first-message">
-          <img src="/momo.png" alt="momo" className="message-momo" />
+          <img src="/emotion/happy.png" alt="momo" className="message-momo" />
           <div className="chat-bubble">
-            안녕하세요! momo입니다 :미소짓는_상기된_얼굴: 무엇을 도와드릴까요?
+            안녕하세요! momo입니다 😊 무엇을 도와드릴까요?
           </div>
         </div>
         {/* :흰색_확인_표시: 첫 메시지 바로 아래에 카테고리 버튼 추가 */}
@@ -106,9 +106,7 @@ export default function Chatbot({ onClose }: ChatbotProps) {
         ))}
         {loading && (
           <div className="chat-message-container bot">
-            <div className="chat-bubble">
-              :모래가_내려오고_있는_모래시계: momo가 답변을 작성 중입니다...
-            </div>
+            <div className="chat-bubble">⏳ momo가 답변을 작성 중입니다...</div>
           </div>
         )}
         <div ref={chatEndRef} />

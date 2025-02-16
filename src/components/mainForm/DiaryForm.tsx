@@ -95,55 +95,64 @@ export default function DiaryForm({
 
   return (
     <div className={`${styles.diaryPanel} ${styles.open}`}>
-      <button className={styles.closeButton} onClick={onClose}>
-        ✖
-      </button>
-      <h2>{formattedDate}</h2>
+      <div className={styles.scrollContainer}>
+        <button className={styles.closeButton} onClick={onClose}>
+          ✖
+        </button>
+        <h2
+          style={{
+            fontFamily: "Wellstudy, sans-serif",
+            fontSize: "30px",
+          }}
+        >
+          {formattedDate}
+        </h2>
 
-      {/* ✅ 이모지 선택 UI */}
-      <EmojiPicker
-        title="날씨"
-        type="weather"
-        selected={selectedWeather}
-        onSelect={setSelectedWeather}
-        resetTrigger={resetTrigger}
-      />
-      <EmojiPicker
-        title="기분"
-        type="emotion"
-        selected={selectedEmojis.join(",")}
-        onSelect={(e) => setSelectedEmojis(e.split(","))}
-        resetTrigger={resetTrigger}
-      />
-      <EmojiPicker
-        title="일상"
-        type="daily"
-        selected={selectedDaily.join(",")}
-        onSelect={(e) => setSelectedDaily(e.split(","))}
-        resetTrigger={resetTrigger}
-      />
-      <EmojiPicker
-        title="활동"
-        type="activity"
-        selected={selectedActivities.join(",")}
-        onSelect={(e) => setSelectedActivities(e.split(","))}
-        resetTrigger={resetTrigger}
-      />
+        {/* ✅ 이모지 선택 UI */}
+        <EmojiPicker
+          title="날씨"
+          type="weather"
+          selected={selectedWeather}
+          onSelect={setSelectedWeather}
+          resetTrigger={resetTrigger}
+        />
+        <EmojiPicker
+          title="기분"
+          type="emotion"
+          selected={selectedEmojis.join(",")}
+          onSelect={(e) => setSelectedEmojis(e.split(","))}
+          resetTrigger={resetTrigger}
+        />
+        <EmojiPicker
+          title="일상"
+          type="daily"
+          selected={selectedDaily.join(",")}
+          onSelect={(e) => setSelectedDaily(e.split(","))}
+          resetTrigger={resetTrigger}
+        />
+        <EmojiPicker
+          title="활동"
+          type="activity"
+          selected={selectedActivities.join(",")}
+          onSelect={(e) => setSelectedActivities(e.split(","))}
+          resetTrigger={resetTrigger}
+        />
 
-      <textarea
-        value={diary}
-        onChange={(e) => setDiary(e.target.value)}
-        placeholder="오늘의 일기를 작성하세요..."
-        className={styles.textarea}
-      />
+        <textarea
+          value={diary}
+          onChange={(e) => setDiary(e.target.value)}
+          placeholder="오늘의 일기를 작성하세요..."
+          className={styles.textarea}
+        />
 
-      <button
-        onClick={handleSave}
-        className={styles.button}
-        disabled={isSaving}
-      >
-        {isSaving ? "저장 중..." : "저장"}
-      </button>
+        <button
+          onClick={handleSave}
+          className={styles.button}
+          disabled={isSaving}
+        >
+          {isSaving ? "저장 중..." : "저장"}
+        </button>
+      </div>
     </div>
   );
 }

@@ -10,7 +10,7 @@
   background-color: transparent;
   color: black;
   box-shadow: none;
-  z-index: 1000;
+  z-index: 900;
   margin-bottom: 20px;
 }
 
@@ -138,4 +138,28 @@
 .logout {
   color: red;
   font-weight: bold;
+}
+
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.authButton {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #ffffff;
+  font-weight: bold;
+  background-color: #3b82f6;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.2s;
+  margin-right: 15px;
+}
+
+.authButton:hover {
+  opacity: 0.8;
 }

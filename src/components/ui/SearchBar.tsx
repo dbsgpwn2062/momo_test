@@ -19,7 +19,7 @@ export default function SearchBar() {
     <div className={styles.searchContainer}>
       <input
         type="text"
-        placeholder="콘텐츠 검색..."
+        placeholder="OTT 콘텐츠 검색"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleSearch()} // ✅ 엔터 키로 검색

@@ -1,7 +1,10 @@
 "use client";
 
-import styles from "@/styles/DiaryForm.module.css";
-import { useState } from "react";
+import styles from "@/styles/ReadDiary.module.css";
+import { useState, useEffect } from "react";
+import { emojiMappings } from "@../../utils/emojiMappings";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation"; // ✅ 페이지 이동을 위해 추가
 
 interface ReadDiaryProps {
   diaryData: any;
@@ -15,9 +18,17 @@ export default function ReadDiary({
   onDeleteSuccess = () => {},
 }: ReadDiaryProps) {
   const [loading, setLoading] = useState(false);
-  const [isChecked, setIsChecked] = useState(false); // ✅ 체크박스 상태 추가
+  const [isChecked, setIsChecked] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [recommendation, setRecommendation] = useState("");
+  const [showMbtiPopup, setShowMbtiPopup] = useState(false); // ✅ MBTI 팝업 상태 추가
+  const router = useRouter(); // ✅ 페이지 이동을 위한 router
+
+  // ✅ 디버깅: `diaryData`가 올바르게 전달되는지 확인
+  useEffect(() => {
+    console.log("✅ ReadDiary.module.css import 확인: ", styles);
+    console.log("📌 diaryData 확인:", diaryData);
+  }, [diaryData]);
 
   // ✅ 삭제 요청 함수
   const handleDelete = async (date: string) => {
@@ -31,11 +42,9 @@ export default function ReadDiary({
 
     setLoading(true);
     try {
-      console.log("[DELETE] 요청 보냄: ", date);
       const res = await fetch(`/api/diary?date=${date}`, {
         method: "DELETE",
       });
-
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || "삭제 실패");
 
@@ -43,23 +52,39 @@ export default function ReadDiary({
       onDeleteSuccess(date);
       onClose();
     } catch (error) {
-      console.error("삭제 실패:", error);
       alert("일기 삭제 중 오류가 발생했습니다.");
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ 콘텐츠 추천 API 호출 함수
+  // ✅ OTT 콘텐츠 추천 API 호출 함수
   const handleRecommend = async () => {
     if (!diaryData?.date) {
       alert("날짜 정보가 없습니다.");
       return;
     }
 
+    // ✅ 쿠키에서 사용자 정보 가져오기
+    const userInfoCookie = Cookies.get("user_info");
+    if (!userInfoCookie) {
+      alert("로그인 정보가 없습니다. 다시 로그인해주세요.");
+      return;
+    }
+
+    const userInfo = JSON.parse(userInfoCookie);
+    const userMbti = userInfo.mbti || "";
+
+    // ✅ MBTI가 없으면 회원정보 수정 페이지로 안내
+    if (!userMbti) {
+      setShowMbtiPopup(true);
+      return;
+    }
+
     const requestBody = {
       date: diaryData.date,
-      type: isChecked ? "sub" : "all", // ✅ 체크박스 상태에 따라 타입 결정
+      type: isChecked ? "sub" : "all",
+      mbti: userMbti, // ✅ MBTI 포함하여 요청
     };
 
     try {
@@ -73,75 +98,102 @@ export default function ReadDiary({
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "추천 실패");
 
-      setRecommendation(data.bedrock_response); // ✅ 추천 결과 저장
-      setShowPopup(true); // ✅ 팝업 띄우기
+      setRecommendation(data.bedrock_response);
+      setShowPopup(true);
     } catch (error) {
-      console.error("추천 실패:", error);
       alert("콘텐츠 추천 중 오류가 발생했습니다.");
     } finally {
       setLoading(false);
     }
   };
 
+  // ✅ 이모지 출력 로직
+  const allEmojis = [
+    ...(diaryData?.emoticons?.weather ? [diaryData.emoticons.weather] : []),
+    ...(diaryData?.emoticons?.emotion || []),
+    ...(diaryData?.emoticons?.daily || []),
+    ...(diaryData?.emoticons?.activity || []),
+  ];
+
   return (
     <div className={`${styles.diaryPanel} ${styles.open}`}>
       <button className={styles.closeButton} onClick={onClose}>
         ✖
       </button>
-      <h2>{diaryData.date} 기록된 일기</h2>
+      <div className={styles.diaryContainer}>
+        {/* 🗑 삭제 버튼 (오른쪽 상단) */}
+        <button
+          className={styles.deleteButton}
+          onClick={() => handleDelete(diaryData.date)}
+        >
+          🗑
+        </button>
 
-      <p>
-        <strong>날씨:</strong> {diaryData.emoticons?.weather || "정보 없음"}
-      </p>
-      <p>
-        <strong>기분:</strong>{" "}
-        {diaryData.emoticons?.emotion?.join(", ") || "정보 없음"}
-      </p>
-      <p>
-        <strong>일상:</strong>{" "}
-        {diaryData.emoticons?.daily?.join(", ") || "정보 없음"}
-      </p>
-      <p>
-        <strong>활동:</strong>{" "}
-        {diaryData.emoticons?.activity?.join(", ") || "정보 없음"}
-      </p>
-      <p>
-        <strong>내용:</strong> {diaryData.diary || "기록 없음"}
-      </p>
+        {/* 📌 일기 제목 */}
+        <h2 className={styles.diaryTitle}>{diaryData.date} 일기</h2>
 
-      {/* ✅ 체크박스 추가 */}
+        {/* 📌 이모지 리스트 */}
+        <div className={styles.emojiSection}>
+          {allEmojis.map((emoji, index) => {
+            const imagePath = Object.keys(emojiMappings).find(
+              (key) => emojiMappings[key] === emoji
+            );
+            return imagePath ? (
+              <img
+                key={index}
+                src={imagePath}
+                alt={emoji}
+                className={styles.emojiImage}
+              />
+            ) : null;
+          })}
+        </div>
+
+        {/* 📌 일기 내용 */}
+        {diaryData.diary && (
+          <p className={styles.diaryText}>{diaryData.diary}</p>
+        )}
+      </div>
+
+      {/* 📌 체크박스 */}
       <div className={styles.checkboxContainer}>
         <label>
           <input
+            className="margin-right: 5px;"
             type="checkbox"
             checked={isChecked}
             onChange={(e) => setIsChecked(e.target.checked)}
           />
-          구독하고 있는 플랫폼에서만 추천받기
+          구독하고 있는 플랫폼에서만 추천받을게요!
         </label>
       </div>
 
-      {/* ✅ 삭제 & 추천 버튼 */}
-      <div className={styles.diaryButtons}>
-        <button
-          className={`${styles.diaryButton} ${styles.deleteButton}`}
-          onClick={() => handleDelete(diaryData.date)}
-        >
-          🗑 기록 삭제
-        </button>
-        <button
-          className={`${styles.diaryButton} ${styles.recommendButton}`}
-          onClick={handleRecommend}
-        >
-          🎥 OTT 추천받기
-        </button>
-      </div>
+      {/* 📌 OTT 추천 버튼 */}
+      <button className={styles.recommendButton} onClick={handleRecommend}>
+        🎥 OTT 추천받기
+      </button>
 
-      {/* ✅ 추천 결과 팝업 */}
+      {/* 📌 추천 결과 팝업 */}
       {showPopup && (
-        <div className={styles.popup}>
-          <p>{recommendation}</p>
-          <button onClick={() => setShowPopup(false)}>닫기</button>
+        <div className={styles.recommendPopup}>
+          <p className={styles.title}>오늘의 추천 콘텐츠</p>
+          <div className={styles.recommendContent}>
+            <p>{recommendation}</p>
+          </div>
+          <button
+            className={styles.closeButton2}
+            onClick={() => setShowPopup(false)}
+          >
+            닫기
+          </button>
+        </div>
+      )}
+
+      {/* 📌 MBTI 없음 팝업 */}
+      {showMbtiPopup && (
+        <div className={styles.recommendPopup}>
+          <p>등록된 회원 MBTI가 없습니다. 회원정보를 수정해주세요.</p>
+          <button onClick={() => router.push("/profile")}>회원정보 수정</button>
         </div>
       )}
     </div>
