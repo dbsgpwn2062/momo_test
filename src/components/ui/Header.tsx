@@ -33,12 +33,14 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const checkAuthStatus = async () => {
-    const idToken = await getTokenFromCookies();
-    if (!idToken) {
-      setIsAuthenticated(false);
-      return;
-    }
     try {
+      const idToken = await getTokenFromCookies();
+
+      if (!idToken) {
+        setIsAuthenticated(false);
+        return;
+      }
+
       const decodedToken: { exp?: number } = jwtDecode(idToken);
       const expTime = decodedToken.exp ? decodedToken.exp * 1000 : 0;
       const currentTime = Date.now();
@@ -49,8 +51,15 @@ export default function Header() {
         setShowLoginPopup(true);
       } else {
         setIsAuthenticated(true);
+        const timeUntilExpiry = expTime - currentTime;
+        setTimeout(async () => {
+          await clearSession();
+          setIsAuthenticated(false);
+          setShowLoginPopup(true);
+        }, timeUntilExpiry);
       }
     } catch (error) {
+      console.error("토큰 체크 중 에러:", error);
       await clearSession();
       setIsAuthenticated(false);
       setShowLoginPopup(true);
@@ -61,28 +70,8 @@ export default function Header() {
     checkAuthStatus();
   }, []);
 
-  const handleLogin = async () => {
-    console.log("🚀 [handleLogin] 로그인 시작");
-
+  const handleLogin = () => {
     window.location.href = COGNITO_LOGIN_URL;
-
-    // 1️⃣ 로그인 후 리디렉트된 페이지에서 idToken 확인
-    setTimeout(async () => {
-      const idToken = await getTokenFromCookies();
-      if (!idToken) {
-        console.warn("❌ [handleLogin] idToken 없음");
-        return;
-      }
-
-      console.log("✅ [handleLogin] idToken 가져옴:", idToken);
-
-      // 2️⃣ 사용자 정보 저장
-      await setUserInfoCookie();
-
-      console.log("✅ [handleLogin] 유저 정보 쿠키 저장 완료!");
-
-      // 3️⃣ 캘린더 API 호cnf
-    }, 1000); // ✅ 1초 대기 후 실행 (비동기 쿠키 저장 반영 고려)
   };
 
   const handleLogout = async () => {
@@ -171,7 +160,7 @@ export default function Header() {
               로그인 세션이 만료되었습니다.
             </p>
             <button onClick={handleLogin} className={styles.popupButton}>
-              확인
+              다시 로그인하기
             </button>
           </div>
         </div>

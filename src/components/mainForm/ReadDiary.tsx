@@ -5,24 +5,33 @@ import { useState, useEffect } from "react";
 import { emojiMappings } from "@../../utils/emojiMappings";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation"; // ✅ 페이지 이동을 위해 추가
+import dayjs from "dayjs";
+import RecommendationContent from "@/components/mainForm/RecommendationContent";
+import RecommendationPopup from "@/components/mainForm/RecommendationPopup";
 
 interface ReadDiaryProps {
   diaryData: any;
   onClose: () => void;
   onDeleteSuccess?: (date: string) => void;
+  onRecommendationSave?: () => Promise<void>;
 }
 
 export default function ReadDiary({
   diaryData,
   onClose,
   onDeleteSuccess = () => {},
+  onRecommendationSave,
 }: ReadDiaryProps) {
   const [loading, setLoading] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [recommendation, setRecommendation] = useState("");
   const [showMbtiPopup, setShowMbtiPopup] = useState(false); // ✅ MBTI 팝업 상태 추가
+  const [diary, setDiary] = useState(diaryData.diary || "");
+  const [isRecommendationOpen, setIsRecommendationOpen] = useState(false);
   const router = useRouter(); // ✅ 페이지 이동을 위한 router
+  const [recommendContent, setRecommendContent] = useState<string | null>(null);
+  const [resultEmotion, setResultEmotion] = useState<string | null>(null);
 
   // ✅ 디버깅: `diaryData`가 올바르게 전달되는지 확인
   useEffect(() => {
@@ -106,7 +115,42 @@ export default function ReadDiary({
       setLoading(false);
     }
   };
+  const handleRecommendationClose = async () => {
+    try {
+      // 현재 날짜로 추천 콘텐츠 API 호출
+      const date = dayjs(diaryData.date).format("YYYY-MM-DD");
+      const response = await fetch(`/api/recommendContent?date=${date}`);
 
+      if (!response.ok) {
+        throw new Error("추천 콘텐츠를 가져오는데 실패했습니다.");
+      }
+
+      const data = await response.json();
+
+      // 기존 일기 내용에 추천 콘텐츠 추가
+      const newContent = `${diary}\n\n[추천 콘텐츠]\n${data.recommend_content}\n\n[감정 분석]\n${data.result_emotion}`;
+      setDiary(newContent);
+
+      // API로 업데이트된 내용 저장
+      await fetch(`/api/diary?date=${date}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          diary: newContent,
+          // 기존 다이어리 데이터 유지
+          emoticons: diaryData.emoticons,
+        }),
+      });
+    } catch (error) {
+      console.error("추천 콘텐츠 추가 실패:", error);
+      alert("추천 콘텐츠를 추가하는데 실패했습니다.");
+    }
+
+    setIsRecommendationOpen(false);
+    onRecommendationSave?.();
+  };
   // ✅ 이모지 출력 로직
   const allEmojis = [
     ...(diaryData?.emoticons?.weather ? [diaryData.emoticons.weather] : []),
@@ -114,6 +158,41 @@ export default function ReadDiary({
     ...(diaryData?.emoticons?.daily || []),
     ...(diaryData?.emoticons?.activity || []),
   ];
+
+  // ✅ 추천 콘텐츠 로드 함수
+  const loadRecommendContent = async () => {
+    try {
+      const date = diaryData.date;
+      const response = await fetch(`/api/recommendContent?date=${date}`);
+      if (response.ok) {
+        const data = await response.json();
+        // ✅ null 체크 추가
+        if (data.recommend_content === null) {
+          setRecommendContent(null);
+          setResultEmotion(null);
+        } else {
+          setRecommendContent(data.recommend_content);
+          setResultEmotion(data.result_emotion);
+        }
+      }
+    } catch (error) {
+      console.error("추천 콘텐츠 로드 실패:", error);
+      // ✅ 에러 시에도 null로 설정
+      setRecommendContent(null);
+      setResultEmotion(null);
+    }
+  };
+
+  // ✅ 컴포넌트 마운트 시와 diaryData 변경 시 데이터 로드
+  useEffect(() => {
+    loadRecommendContent();
+  }, [diaryData.date]);
+
+  // ✅ 팝업 닫기 핸들러
+  const handlePopupClose = async () => {
+    setShowPopup(false);
+    await loadRecommendContent();
+  };
 
   return (
     <div className={`${styles.diaryPanel} ${styles.open}`}>
@@ -153,25 +232,35 @@ export default function ReadDiary({
         {diaryData.diary && (
           <p className={styles.diaryText}>{diaryData.diary}</p>
         )}
-      </div>
 
-      {/* 📌 체크박스 */}
-      <div className={styles.checkboxContainer}>
-        <label>
-          <input
-            className="margin-right: 5px;"
-            type="checkbox"
-            checked={isChecked}
-            onChange={(e) => setIsChecked(e.target.checked)}
-          />
-          구독하고 있는 플랫폼에서만 추천받을게요!
-        </label>
-      </div>
+        {/* 📌 추천 콘텐츠 컴포넌트 */}
+        <RecommendationContent
+          recommendContent={recommendContent}
+          resultEmotion={resultEmotion}
+        />
 
-      {/* 📌 OTT 추천 버튼 */}
-      <button className={styles.recommendButton} onClick={handleRecommend}>
-        🎥 OTT 추천받기
-      </button>
+        {/* 📌 체크박스와 추천 버튼 - 추천 콘텐츠가 null일 때만 표시 */}
+        {recommendContent === null && (
+          <>
+            <div className={styles.checkboxContainer}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={isChecked}
+                  onChange={(e) => setIsChecked(e.target.checked)}
+                />
+                구독하고 있는 플랫폼에서만 추천받을게요!
+              </label>
+            </div>
+            <button
+              className={styles.recommendButton}
+              onClick={handleRecommend}
+            >
+              🎥 OTT 추천받기
+            </button>
+          </>
+        )}
+      </div>
 
       {/* 📌 추천 결과 팝업 */}
       {showPopup && (
@@ -180,10 +269,7 @@ export default function ReadDiary({
           <div className={styles.recommendContent}>
             <p>{recommendation}</p>
           </div>
-          <button
-            className={styles.closeButton2}
-            onClick={() => setShowPopup(false)}
-          >
+          <button className={styles.closeButton2} onClick={handlePopupClose}>
             닫기
           </button>
         </div>

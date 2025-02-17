@@ -145,6 +145,20 @@ export default function MainPage() {
     await loadMonthData(year, month);
   };
 
+  // ✅ 추천 콘텐츠 저장 후 다이어리 데이터 새로고침
+  const handleRecommendationSave = async () => {
+    if (selectedDate) {
+      try {
+        const data = await fetchDiaryData(
+          dayjs(selectedDate).format("YYYY-MM-DD")
+        );
+        setDiaryData(data);
+      } catch (error) {
+        console.error("다이어리 데이터 새로고침 실패:", error);
+      }
+    }
+  };
+
   return (
     <div className={styles.mainContainer}>
       <Header />
@@ -200,6 +214,7 @@ export default function MainPage() {
             diaryData={diaryData}
             onClose={() => setIsDiaryOpen(false)}
             onDeleteSuccess={handleDeleteDiary}
+            onRecommendationSave={handleRecommendationSave}
           />
         ) : (
           <DiaryForm
