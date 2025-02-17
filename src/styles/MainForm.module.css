@@ -78,8 +78,8 @@
 }
 /* :별2: 챗봇 팝업 창 */
 .chatbotPopup {
-  width: 700px; /* :흰색_확인_표시: 기존 크기 유지 */
-  height: 850px; /* :흰색_확인_표시: 기존 크기 유지 */
+  width: 40%px; /* :흰색_확인_표시: 기존 크기 유지 */
+  height: 60%; /* :흰색_확인_표시: 기존 크기 유지 */
   background: white;
   border-radius: 20px;
   box-shadow: -4px 0px 10px rgba(0, 0, 0, 0.1);
