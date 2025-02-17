@@ -24,7 +24,7 @@ const ServiceSlider = () => {
         <img src="/images/slide2.png" alt="AI 감정 분석" />
       </div>
       <div>
-        <img src="/images/slide3.png" alt="OTT 추천" />
+        <img src="" alt="OTT 추천" />
       </div>
     </Slider>
   );

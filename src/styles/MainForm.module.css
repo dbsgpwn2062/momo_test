@@ -1,9 +1,10 @@
 .mainContainer {
   display: flex;
+  height: 100%;
   flex-direction: column;
   align-items: stretch;
   justify-content: center;
-  background-color: #ffffff;
+  background-color: #f8f5f0;
   padding-top: 64px;
 }
 

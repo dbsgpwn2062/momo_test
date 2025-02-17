@@ -3,6 +3,12 @@
 import ServiceSlider from "@/components/ServiceSlider";
 import Link from "next/link";
 
+const COGNITO_SIGN_UP_URL =
+  process.env.NEXT_PUBLIC_COGNITO_DOMAIN +
+  `/signup?client_id=${process.env.NEXT_PUBLIC_COGNITO_APP_CLIENT_ID}` +
+  `&response_type=code&scope=email+openid+profile` +
+  `&redirect_uri=${process.env.NEXT_PUBLIC_REDIRECT_URI}`;
+
 export default function Home() {
   return (
     <div>
@@ -37,7 +43,7 @@ export default function Home() {
 
       {/* 회원가입 버튼 */}
       <section className="cta">
-        <Link href="/signup">
+        <Link href={COGNITO_SIGN_UP_URL}>
           <button>지금 시작하기</button>
         </Link>
       </section>
@@ -47,9 +53,11 @@ export default function Home() {
         .header {
           text-align: center;
           padding: 40px 20px;
+          font-weight: bold;
+          font-size: 25px;
         }
         .slider-section {
-          max-width: 800px;
+          max-width: 1000px;
           margin: 0 auto;
         }
         .features {
@@ -62,6 +70,8 @@ export default function Home() {
           flex: 1;
           text-align: center;
           padding: 20px;
+          font-size: 18px;
+          font-weight: bold;
           background: #f9f9f9;
           border-radius: 10px;
         }
