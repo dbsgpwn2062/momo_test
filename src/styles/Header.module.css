@@ -2,17 +2,17 @@
 .header {
   position: fixed;
   top: 0;
-  left: 0;
   width: 100%;
+  height: 10%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 30px;
-  height: 100px;
-  background-color: #f8f5f0;
+  padding: 16px;
+  background-color: #ffffff;
   color: black;
   box-shadow: none;
-  z-index: 1000;
+  z-index: 900;
+  margin-bottom: 20px;
 }
 
 /* ✅ 햄버거 버튼 스타일 */
@@ -28,10 +28,10 @@
 
 /* ✅ 로고 */
 .logo {
-  height: 60px; /* 로고 크기 조절 */
-  width: 180px;
+  height: 72px; /* 로고 크기 조절 */
+  width: 216px;
   cursor: pointer;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 /* ✅ 네비게이션 */
@@ -42,9 +42,9 @@
 
 /* ✅ 버튼 공통 스타일 */
 .button {
-  padding: 8px 16px;
+  padding: 6px 14px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: bold;
   cursor: pointer;
   border: none;
@@ -91,8 +91,8 @@
 .sidebar {
   position: fixed;
   top: 0;
-  right: -250px; /* 초기 상태에서 숨김 */
-  width: 250px;
+  right: -1000px; /* 초기 상태에서 숨김 */
+  width: 15%;
   height: 100%;
   background: white;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
@@ -112,6 +112,21 @@
   list-style: none;
   padding: 0;
   margin: 0;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* 아이콘과 텍스트 사이 간격 */
+}
+
+.menu li a,
+.menu li button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
 }
 
 .menu li {

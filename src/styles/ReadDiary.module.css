@@ -13,7 +13,7 @@
   overflow-y: auto; /* ✅ 세로 스크롤 추가 */
   max-height: 100vh; /* ✅ 전체 화면 높이 */
 
-  background-image: url("/diary/diary.png");
+  background-image: url("/diary/diary1.png");
   background-size: 100% 100%; /* 폼에 완전히 맞추기 */
   background-repeat: no-repeat;
   background-position: center;
@@ -84,8 +84,8 @@
 
 .closeButton {
   position: fixed; /* ✅ 화면 기준으로 고정 */
-  top: 50px; /* ✅ 화면의 상단에서 20px 떨어짐 */
-  right: 80px; /* ✅ 화면의 오른쪽에서 30px 떨어짐 */
+  top: 100px; /* ✅ 화면의 상단에서 20px 떨어짐 */
+  right: 100px; /* ✅ 화면의 오른쪽에서 30px 떨어짐 */
   width: 30px;
   height: 30px;
   background-color: red; /* 빨간색 */
@@ -99,6 +99,9 @@
   display: flex;
   align-items: center;
   justify-content: center; /* ✅ 다른 요소보다 위에 배치 */
+}
+.closeButton:hover {
+  background-color: rgb(139, 1, 1);
 }
 
 .checkboxContainer {

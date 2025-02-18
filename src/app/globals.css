@@ -34,8 +34,12 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  background-color: #f8f5f0;
+  background-color: #ffffff;
   font-family: "Arial", sans-serif;
+}
+
+.Nanum {
+  font-family: "Nanum", sans-serif;
 }
 
 .kimbaesun {
@@ -55,13 +59,16 @@ body {
   font-family: "Ryupig", sans-serif;
   font-weight: 1500;
   width: 100%;
-  max-width: 900px;
-  background: rgb(255, 255, 255);
+  max-width: 1500px;
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   margin: 50px;
   border-radius: 10px;
+  aspect-ratio: 15 / 9;
+  background-image: url("/calendar/calendar_bg.png"); /* 배경 이미지 추가 */
+  background-size: cover; /* 이미지가 컨테이너를 꽉 채우도록 */
+  background-position: center; /* 이미지 중앙 정렬 */
+  background-repeat: no-repeat; /* 이미지 반복 없음 */
 }
 
 /* 요일 헤더 스타일 */
@@ -70,13 +77,19 @@ body {
   grid-template-columns: repeat(7, 1fr);
   font-weight: bold;
   text-align: center;
-  font-size: 18px;
+  font-size: 25px;
+  font-weight: 900;
   padding: 5px 0;
-  background: #bac0d7;
+  background: rgb(255, 132, 132);
   border-bottom: 2px solid #ddd;
   border-radius: 5px;
 }
-
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none; /* 밑줄 제거 */
+  text-underline-position: unset; /* 밑줄 위치 제거 */
+  -webkit-text-decoration: none; /* Safari 지원 */
+  cursor: default; /* 커서 기본값으로 변경 */
+}
 /* 토요일과 일요일 요일 색상 */
 .react-calendar__month-view__weekdays__weekday:nth-child(1) abbr {
   color: rgb(159, 0, 0);
@@ -101,11 +114,12 @@ body {
   align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
-  height: 80px;
-  font-size: 18px;
+  flex-direction: row;
+  aspect-ratio: 15 / 10;
+  font-size: 20px;
   text-align: left;
   border-radius: 5px;
-  border: 1px solid #ffffff;
+  border: 4px solid #eeeeee;
   cursor: pointer;
   margin: 2px;
   padding: 0px;
@@ -117,6 +131,12 @@ body {
   border: 2px;
   border-radius: 50%; /* 동그랗게 테두리 */
   padding: 3px; /* 숫자 주위 공간 확보 */
+  width: 20%;
+}
+
+.react-calendar__month-view__days {
+  border-top: 1px solid #ddd;
+  border-left: 1px solid #ddd;
 }
 
 /* 이전/다음 달 날짜 흐리게 */
@@ -155,17 +175,19 @@ body {
 .react-calendar__navigation {
   display: flex !important;
   align-items: center;
-  justify-content: center; /* ✅ 가운데 정렬 */
+  justify-content: center;
   padding: 5px 10px;
-  background: #ffffff;
+  background: rgb(68, 75, 132);
+  color: #ffffff;
   position: relative;
+  border-radius: 10px;
 }
 
 /* 네비게이션 버튼 기본 스타일 */
 .react-calendar__navigation button {
   background: none;
   border: none;
-  font-size: 30px;
+  font-size: 40px;
   cursor: pointer;
   padding: 5px 10px;
 }
@@ -237,8 +259,8 @@ body {
 /* 오늘 날짜 숫자 옆에 'today!' 표시 */
 .react-calendar__tile--now abbr::after {
   content: " today!";
-  font-size: 20px;
-  color: #509948; /* 노란색 */
+  font-size: 25px;
+  color: rgb(255, 131, 131); /* 노란색 */
   margin-left: 5px; /* 숫자와 간격 */
 }
 
@@ -246,7 +268,7 @@ body {
 .react-calendar__tile--active {
   background: transparent !important;
   color: inherit !important;
-  border: 2px solid #ddd !important; /* ✅ 회색 테두리 추가 */
+  border: 5px solid #1f1d2c !important; /* ✅ 회색 테두리 추가 */
   border-radius: 5px;
 }
 
@@ -265,13 +287,17 @@ body {
 
 /* 오른쪽 하단에 작은 원으로 표시 */
 .highlight::after {
-  content: "작성완료 ✔"; /* ✅ 체크마크 아이콘 */
+  content: ""; /* 텍스트 제거 */
   position: absolute;
-  bottom: 2px; /* ✅ 오른쪽 하단 정렬 */
-  right: 2px;
-  font-size: 15px; /* ✅ 크기 조절 */
-  color: purple; /* ✅ 보라색 */
-  font-weight: bold;
+  bottom: 3px; /* ✅ 오른쪽 하단 정렬 */
+  right: 0px;
+  width: 60%; /* 이미지 크기 설정 */
+  height: 60%;
+  background-image: url("/calendar/done_blue.png");
+  background-size: contain; /* 이미지 크기 조절 */
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-left: auto;
 }
 
 /*---Diary----*/

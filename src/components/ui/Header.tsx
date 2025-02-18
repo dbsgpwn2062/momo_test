@@ -126,26 +126,53 @@ export default function Header() {
         <ul className={styles.menu}>
           <li>
             <Link href="/home" onClick={() => setIsMenuOpen(false)}>
-              🏠 홈
+              <div className={styles.menuItem}>
+                <Image src="/utils/home.png" alt="홈" width={24} height={24} />
+                <span>홈</span>
+              </div>
             </Link>
           </li>
           <li>
             <Link href="/search" onClick={() => setIsMenuOpen(false)}>
-              🔍 영화 검색
+              <div className={styles.menuItem}>
+                <Image
+                  src="/utils/search.png"
+                  alt="영화 검색"
+                  width={24}
+                  height={24}
+                />
+                <span>영화 검색</span>
+              </div>
             </Link>
           </li>
           {isAuthenticated ? (
             <>
               <li>
                 <Link href="/profile" onClick={() => setIsMenuOpen(false)}>
-                  👤 회원정보 수정
+                  <div className={styles.menuItem}>
+                    <Image
+                      src="/utils/user.png"
+                      alt="회원정보 수정"
+                      width={24}
+                      height={24}
+                    />
+                    <span>회원정보 수정</span>
+                  </div>
                 </Link>
               </li>
             </>
           ) : (
             <li>
               <button onClick={handleLogin} className={styles.loginButton}>
-                🔑 회원가입
+                <div className={styles.menuItem}>
+                  <Image
+                    src="/utils/user.png"
+                    alt="회원가입"
+                    width={24}
+                    height={24}
+                  />
+                  <span>회원가입</span>
+                </div>
               </button>
             </li>
           )}

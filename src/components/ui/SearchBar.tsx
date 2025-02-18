@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation"; // ✅ 페이지 이동을 위해 추가
 import styles from "@/styles/SearchBar.module.css";
+import Image from "next/image"; // Image 컴포넌트 import 추가
 
 export default function SearchBar() {
   const [query, setQuery] = useState("");
@@ -26,7 +27,7 @@ export default function SearchBar() {
         className={styles.searchInput}
       />
       <button className={styles.searchButton} onClick={handleSearch}>
-        🔍
+        <Image src="/utils/search1.png" alt="검색" width={40} height={40} />
       </button>
     </div>
   );

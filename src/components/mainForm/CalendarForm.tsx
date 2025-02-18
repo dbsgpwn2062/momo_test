@@ -46,13 +46,42 @@ export default function CalendarForm({
         className="react-calendar"
         locale="ko-KR"
         calendarType="gregory"
+        showFixedNumberOfWeeks={false}
         formatShortWeekday={(locale, date) =>
           ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"][date.getDay()]
         }
-        prev2Label="≪"
-        prevLabel="＜"
-        nextLabel="＞"
-        next2Label="≫"
+        prev2Label={
+          <img
+            src="/calendar/pre_year.png"
+            alt="이전 년"
+            width="20"
+            height="20"
+          />
+        }
+        prevLabel={
+          <img
+            src="/calendar/left-arrow.png"
+            alt="이전 달"
+            width="20"
+            height="20"
+          />
+        }
+        nextLabel={
+          <img
+            src="/calendar/right-arrow.png"
+            alt="다음 달"
+            width="20"
+            height="20"
+          />
+        }
+        next2Label={
+          <img
+            src="/calendar/next_year.png"
+            alt="다음 년"
+            width="20"
+            height="20"
+          />
+        }
         formatDay={(locale, date) => date.getDate().toString()}
         tileClassName={({ date }) => {
           const dateKey = dayjs(date).format("YYYY-MM-DD");

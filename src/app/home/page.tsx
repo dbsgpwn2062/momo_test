@@ -185,7 +185,6 @@ export default function MainPage() {
         >
           <div className={styles.chatbotBubble}>
             <div className={styles.chatbotTail}></div>
-            <Image src="/momo.png" alt="Chatbot" width={50} height={50} />
           </div>
           <span className={styles.chatbotText}>momo chat</span>
         </button>

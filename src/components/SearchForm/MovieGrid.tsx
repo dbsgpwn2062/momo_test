@@ -25,7 +25,7 @@ export default function MovieGrid({ searchQuery }: { searchQuery: string }) {
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
-  const PAGE_SIZE = 48; // ✅ 한 번에 불러오는 데이터 개수
+  const PAGE_SIZE = 30; // ✅ 한 번에 불러오는 데이터 개수
 
   // 🔄 검색어 변경 시 초기화
   useEffect(() => {

@@ -13,7 +13,7 @@
   overflow-y: auto; /* ✅ 세로 스크롤 추가 */
   max-height: 100vh; /* ✅ 전체 화면 높이 */
 
-  background-image: url("/diary/diary.png");
+  background-image: url("/diary/diary1.png");
   background-size: 100% 100%; /* 폼에 완전히 맞추기 */
   background-repeat: no-repeat;
   background-position: center;
@@ -21,16 +21,10 @@
 
 .scrollContainer {
   flex: 1;
+  margin-top: 20px;
   overflow-y: auto; /* ✅ 내부 요소만 스크롤 가능 */
   max-height: calc(100vh - 160px); /* ✅ 부모 높이에서 padding 값 제외 */
   padding-right: 10px; /* ✅ 스크롤바와 간격 */
-}
-
-.scrollContainer {
-  flex: 1;
-  overflow-y: auto; /* ✅ 내부에서만 스크롤 가능 */
-  max-height: calc(100vh - 160px);
-  padding-right: 10px;
 }
 
 /* ✅ 스크롤바 숨기기 (크로스 브라우징 적용) */
@@ -74,8 +68,8 @@
 /* ✅ 닫기 버튼 스타일 */
 .closeButton {
   position: fixed; /* ✅ 화면 기준으로 고정 */
-  top: 50px; /* ✅ 화면의 상단에서 20px 떨어짐 */
-  right: 80px; /* ✅ 화면의 오른쪽에서 30px 떨어짐 */
+  top: 100px; /* ✅ 화면의 상단에서 20px 떨어짐 */
+  right: 100px; /* ✅ 화면의 오른쪽에서 30px 떨어짐 */
   width: 30px;
   height: 30px;
   background-color: red; /* 빨간색 */

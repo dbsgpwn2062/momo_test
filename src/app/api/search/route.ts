@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
   const INDEX = process.env.NEXT_PUBLIC_ELASTICSEARCH_INDEX!;
   const url = `${ELASTICSEARCH_HOST}/${INDEX}/_search`;
 
-  const PAGE_SIZE = 48;
+  const PAGE_SIZE = 25;
   const from = page * PAGE_SIZE;
 
   const query = {

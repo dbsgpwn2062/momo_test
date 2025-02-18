@@ -1,4 +1,5 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL_BEDROCK;
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
