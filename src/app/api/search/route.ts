@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     query: {
       multi_match: {
         query: q,
-        fields: ["Title^4", "Genre^2", "Platform^3"],
+        fields: ["title^4", "genre^2", "platform^3"],
         operator: "OR",
       },
     },

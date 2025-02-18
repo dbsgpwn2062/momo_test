@@ -1,22 +1,43 @@
 .mainContainer {
   display: flex;
-  height: 100%;
+  height: 100vh; /* 전체 높이 고정 */
   flex-direction: column;
-  align-items: stretch;
-  justify-content: center;
   background-color: #f8f5f0;
-  padding-top: 64px;
+  overflow-x: hidden; /* 가로 스크롤 방지 */
 }
 
 .contentWrapper {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: center; /* ✅ 중앙 정렬 */
-  gap: 10%; /* 캘린더와 사이드바 사이 여백 */
-  margin-top: 20px;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2rem;
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 100px); /* 헤더 높이를 제외한 높이 */
+  margin-top: 100px; /* 헤더 높이만큼 마진 */
+  padding: 2rem;
+  box-sizing: border-box;
+  overflow-y: auto; /* 세로 스크롤만 허용 */
+  overflow-x: hidden; /* 가로 스크롤 방지 */
+}
+
+.calendarContainer {
+  flex: 1;
+  max-width: 85%;
+  min-width: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 2rem; /* 하단 여백 추가 */
+}
+
+.sidebarContainer {
+  flex: 0 0 15%;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
 .chatbotButton {

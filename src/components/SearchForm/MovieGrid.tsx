@@ -6,15 +6,15 @@ import "@/styles/search.css"; // ✅ CSS 적용
 interface Movie {
   _id: string;
   _source: {
-    Title: string;
-    Genre: string;
-    Platform: string;
-    PosterURL: string;
-    Synopsis: string;
-    Rating: string;
-    Runtime: string;
-    Country: string;
-    ReleaseDate: string;
+    title: string;
+    genre: string;
+    platform: string;
+    poster_url: string;
+    synopsis: string;
+    rating: string;
+    runtime: string;
+    country: string;
+    releaseDate: string;
   };
 }
 
@@ -109,16 +109,16 @@ export default function MovieGrid({ searchQuery }: { searchQuery: string }) {
             >
               {/* 🎬 영화 포스터 */}
               <img
-                src={movie._source.PosterURL}
-                alt={movie._source.Title}
+                src={movie._source.poster_url}
+                alt={movie._source.title}
                 className="movie-poster"
               />
 
               {/* 🎬 영화 제목 */}
-              <h3 className="movie-title">{movie._source.Title}</h3>
+              <h3 className="movie-title">{movie._source.title}</h3>
 
               {/* 🏷️ 플랫폼 정보 */}
-              <p className="movie-platform">{movie._source.Platform}</p>
+              <p className="movie-platform">{movie._source.platform}</p>
             </div>
           ))
         ) : (
@@ -133,32 +133,32 @@ export default function MovieGrid({ searchQuery }: { searchQuery: string }) {
             <button className="close-btn" onClick={closePopup}>
               ✖
             </button>
-            <h2>{selectedMovie._source.Title}</h2>
+            <h2>{selectedMovie._source.title}</h2>
             <img
-              src={selectedMovie._source.PosterURL}
-              alt={selectedMovie._source.Title}
+              src={selectedMovie._source.poster_url}
+              alt={selectedMovie._source.title}
               className="popup-poster"
             />
             <p>
-              <strong>장르:</strong> {selectedMovie._source.Genre}
+              <strong>장르:</strong> {selectedMovie._source.genre}
             </p>
             <p>
-              <strong>플랫폼:</strong> {selectedMovie._source.Platform}
+              <strong>플랫폼:</strong> {selectedMovie._source.platform}
             </p>
             <p>
-              <strong>줄거리:</strong> {selectedMovie._source.Synopsis}
+              <strong>줄거리:</strong> {selectedMovie._source.synopsis}
             </p>
             <p>
-              <strong>평점:</strong> {selectedMovie._source.Rating}
+              <strong>평점:</strong> {selectedMovie._source.rating}
             </p>
             <p>
-              <strong>상영 시간:</strong> {selectedMovie._source.Runtime}
+              <strong>상영 시간:</strong> {selectedMovie._source.runtime}
             </p>
             <p>
-              <strong>국가:</strong> {selectedMovie._source.Country}
+              <strong>국가:</strong> {selectedMovie._source.country}
             </p>
             <p>
-              <strong>개봉일:</strong> {selectedMovie._source.ReleaseDate}
+              <strong>개봉일:</strong> {selectedMovie._source.releaseDate}
             </p>
           </div>
         </div>

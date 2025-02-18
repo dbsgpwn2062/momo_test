@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Calendar, { CalendarProps } from "react-calendar";
 import dayjs from "dayjs";
+import styles from "@/styles/MainForm.module.css";
 
 interface CalendarFormProps {
   onDateSelect: (date: Date) => void;
@@ -36,13 +37,13 @@ export default function CalendarForm({
   };
 
   return (
-    <div className="calendarContainer">
+    <div className={styles.calendarContainer}>
       {" "}
       {/* ✅ 전역 CSS 적용 */}
       <Calendar
         onChange={handleDateChange}
         onActiveStartDateChange={handleActiveStartDateChange} // ✅ 월 변경 감지
-        className={"react-calendar"}
+        className="react-calendar"
         locale="ko-KR"
         calendarType="gregory"
         formatShortWeekday={(locale, date) =>
