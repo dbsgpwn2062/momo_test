@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL_BEDROCK;
 
 // ✅ HTTP-only 쿠키에서 idToken 가져오기
 const getTokenFromCookies = (req: NextRequest): string | null => {
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     }
 
     // ✅ 백엔드 API 엔드포인트 설정 (POST 요청)
-    const backendUrl = `${API_BASE_URL}/home/bedrock/${type}/${date}`;
+    const backendUrl = `${API_BASE_URL}/bedrock/${type}/${date}`;
     console.log(`[API 요청] ${backendUrl}`);
 
     // ✅ 백엔드 API 호출 (POST 방식) + 바디 추가
@@ -63,4 +63,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-

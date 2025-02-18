@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL_BEDROCK;
 
 // ✅ HTTP-only 쿠키에서 idToken 가져오기
 const getTokenFromCookies = (req: NextRequest): string | null => {
@@ -33,15 +33,12 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const response = await fetch(
-      `${API_BASE_URL}/home/calendar/recommend/${date}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${idToken}`,
-        },
-      }
-    );
+    const response = await fetch(`${API_BASE_URL}/bedrock/response/${date}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+      },
+    });
 
     if (!response.ok) {
       throw new Error(`API 호출 실패 (HTTP ${response.status})`);

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const BACKEND_URL = process.env.NEXT_PUBLIC_API_BASE_URL_HOME;
 
 // ✅ 쿠키에서 idToken 추출하는 함수
 const getTokenFromCookies = (req: NextRequest): string | null => {

@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation"; // ✅ URL에서 검색어 가져오기
 import SearchBar from "@/components/SearchForm/SearchBar";
 import MovieGrid from "@/components/SearchForm/MovieGrid";
 import "@/styles/search.css";
 
-export default function MovieSearchPage() {
+// 검색 컴포넌트를 별도로 분리
+function SearchContent() {
   const searchParams = useSearchParams(); // ✅ URL에서 `q` 가져오기
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -19,9 +20,20 @@ export default function MovieSearchPage() {
   }, [searchParams]); // ✅ `searchParams` 변경될 때마다 실행
 
   return (
-    <div className="searchPage">
+    <>
       <SearchBar />
       <MovieGrid searchQuery={searchQuery} />
+    </>
+  );
+}
+
+// 메인 페이지 컴포넌트
+export default function MovieSearchPage() {
+  return (
+    <div className="searchPage">
+      <Suspense fallback={<div>Loading...</div>}>
+        <SearchContent />
+      </Suspense>
     </div>
   );
 }

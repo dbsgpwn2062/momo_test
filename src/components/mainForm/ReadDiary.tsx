@@ -32,6 +32,10 @@ export default function ReadDiary({
   const router = useRouter(); // ✅ 페이지 이동을 위한 router
   const [recommendContent, setRecommendContent] = useState<string | null>(null);
   const [resultEmotion, setResultEmotion] = useState<string | null>(null);
+  const [contentData, setContentData] = useState<{
+    title: string;
+    poster_url: string;
+  } | null>(null);
 
   // ✅ 디버깅: `diaryData`가 올바르게 전달되는지 확인
   useEffect(() => {
@@ -194,94 +198,27 @@ export default function ReadDiary({
     await loadRecommendContent();
   };
 
+  const fetchContentData = async () => {
+    try {
+      const date = dayjs(diaryData.date).format("YYYY-MM-DD");
+      const response = await fetch(`/api/recommendContent?date=${date}`);
+
+      if (!response.ok) {
+        throw new Error("콘텐츠 데이터를 가져오는데 실패했습니다.");
+      }
+
+      const data = await response.json();
+      if (data.content_info) {
+        setContentData({
+          title: data.content_info.title,
+          poster_url: data.content_info.poster_url
+        });
+      }
+    } catch (error) {
+      console.error("콘텐츠 데이터 로드 실패:", error);
+      alert("콘텐츠 데이터를 가져오는데 실패했습니다.");
+    }
+  };
+
   return (
-    <div className={`${styles.diaryPanel} ${styles.open}`}>
-      <button className={styles.closeButton} onClick={onClose}>
-        ✖
-      </button>
-      <div className={styles.diaryContainer}>
-        {/* 🗑 삭제 버튼 (오른쪽 상단) */}
-        <button
-          className={styles.deleteButton}
-          onClick={() => handleDelete(diaryData.date)}
-        >
-          🗑
-        </button>
-
-        {/* 📌 일기 제목 */}
-        <h2 className={styles.diaryTitle}>{diaryData.date} 일기</h2>
-
-        {/* 📌 이모지 리스트 */}
-        <div className={styles.emojiSection}>
-          {allEmojis.map((emoji, index) => {
-            const imagePath = Object.keys(emojiMappings).find(
-              (key) => emojiMappings[key] === emoji
-            );
-            return imagePath ? (
-              <img
-                key={index}
-                src={imagePath}
-                alt={emoji}
-                className={styles.emojiImage}
-              />
-            ) : null;
-          })}
-        </div>
-
-        {/* 📌 일기 내용 */}
-        {diaryData.diary && (
-          <p className={styles.diaryText}>{diaryData.diary}</p>
-        )}
-
-        {/* 📌 추천 콘텐츠 컴포넌트 */}
-        <RecommendationContent
-          recommendContent={recommendContent}
-          resultEmotion={resultEmotion}
-        />
-
-        {/* 📌 체크박스와 추천 버튼 - 추천 콘텐츠가 null일 때만 표시 */}
-        {recommendContent === null && (
-          <>
-            <div className={styles.checkboxContainer}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={isChecked}
-                  onChange={(e) => setIsChecked(e.target.checked)}
-                />
-                구독하고 있는 플랫폼에서만 추천받을게요!
-              </label>
-            </div>
-            <button
-              className={styles.recommendButton}
-              onClick={handleRecommend}
-            >
-              🎥 OTT 추천받기
-            </button>
-          </>
-        )}
-      </div>
-
-      {/* 📌 추천 결과 팝업 */}
-      {showPopup && (
-        <div className={styles.recommendPopup}>
-          <p className={styles.title}>오늘의 추천 콘텐츠</p>
-          <div className={styles.recommendContent}>
-            <p>{recommendation}</p>
-          </div>
-          <button className={styles.closeButton2} onClick={handlePopupClose}>
-            닫기
-          </button>
-        </div>
-      )}
-
-      {/* 📌 MBTI 없음 팝업 */}
-      {showMbtiPopup && (
-        <div className={styles.recommendPopup}>
-          <p>등록된 회원 MBTI가 없습니다. 회원정보를 수정해주세요.</p>
-          <button onClick={() => router.push("/profile")}>회원정보 수정</button>
-        </div>
-      )}
-    </div>
-  );
-}
+    <div className={`

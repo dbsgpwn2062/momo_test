@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL!;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL_HOME!;
 
 // ✅ GET: 특정 날짜 or 월별 데이터 가져오기
 export async function GET(req: NextRequest) {

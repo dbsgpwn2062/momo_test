@@ -6,7 +6,7 @@ const CLIENT_ID = process.env.NEXT_PUBLIC_COGNITO_APP_CLIENT_ID!;
 const CLIENT_SECRET = process.env.NEXT_PUBLIC_COGNITO_APP_CLIENT_SECRET!;
 const REDIRECT_URI = process.env.NEXT_PUBLIC_REDIRECT_URI!;
 
-// ✅ [POST] 로그인 처리 → Cognito에서 토큰 받아와서 쿠키 저장
+// ✅ [POST]  처리 → Cognito에서 토큰 받아와서 쿠키 저장
 export async function POST(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const code = searchParams.get("code");

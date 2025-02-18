@@ -1,10 +1,10 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL_BEDROCK;
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     console.log(":수신_봉투: [Next.js] 사용자 입력:", body);
     // :흰색_확인_표시: Django API URL 수정
-    const response = await fetch(`${API_BASE_URL}/home/bedrock/chatbot`, {
+    const response = await fetch(`${API_BASE_URL}/bedrock/chatbot`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
