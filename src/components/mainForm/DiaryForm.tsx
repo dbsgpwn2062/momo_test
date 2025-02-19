@@ -141,7 +141,7 @@ export default function DiaryForm({
         <textarea
           value={diary}
           onChange={(e) => setDiary(e.target.value)}
-          placeholder="오늘의 일기를 작성하세요..."
+          placeholder="일기를 작성하면 momo가 더 자세히 찾아봐드릴게요🔍"
           className={styles.textarea}
         />
 

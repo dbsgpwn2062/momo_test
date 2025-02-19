@@ -11,7 +11,7 @@
 }
 /* :별2: 챗봇 헤더 */
 .chat-header {
-  background: #ff6b81;
+  background: rgb(255, 131, 131);
   color: white;
   padding: 15px;
   font-size: 20px;
@@ -67,7 +67,7 @@
   justify-content: flex-end;
 }
 .chat-message.user {
-  background-color: #ff6b81;
+  background-color: rgb(255, 131, 131);
   color: white;
   padding: 10px 14px;
   border-radius: 10px;
@@ -86,7 +86,7 @@
 }
 /* :별2: 카테고리 버튼 */
 .chat-category-button {
-  background-color: #ff6b81;
+  background-color: rgb(255, 131, 131);
   color: white;
   border: none;
   padding: 10px 15px;
@@ -98,7 +98,7 @@
   text-align: center;
 }
 .chat-category-button:hover {
-  background: #ff4757;
+  background: rgb(255, 131, 131);
 }
 /* :흰색_확인_표시: 메시지 리스트 */
 .chat-messages {
@@ -123,7 +123,7 @@
   outline: none;
 }
 .chat-send-btn {
-  background: #ff6b81;
+  background: rgb(255, 131, 131);
   width: 70px;
   color: white;
   border: none;
@@ -133,7 +133,7 @@
   cursor: pointer;
 }
 .chat-send-btn:hover {
-  background: #ff4757;
+  background: rgb(255, 131, 131);
 }
 .chat-send-btn::after {
   content: "📩";

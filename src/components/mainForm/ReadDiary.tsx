@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation"; // ✅ 페이지 이동을 위해 �
 import dayjs from "dayjs";
 import RecommendationContent from "@/components/mainForm/RecommendationContent";
 import RecommendationPopup from "@/components/mainForm/RecommendationPopup";
+import LoadingPopup from "@/components/ui/LoadingPopup"; // 로딩 팝업 임포트
 
 interface ReadDiaryProps {
   diaryData: any;
@@ -101,7 +102,7 @@ export default function ReadDiary({
     };
 
     try {
-      setLoading(true);
+      setLoading(true); // 로딩 시작
       const res = await fetch("/api/recommend", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -116,7 +117,7 @@ export default function ReadDiary({
     } catch (error) {
       alert("콘텐츠 추천 중 오류가 발생했습니다.");
     } finally {
-      setLoading(false);
+      setLoading(false); // 로딩 종료
     }
   };
   const handleRecommendationClose = async () => {
@@ -250,119 +251,128 @@ export default function ReadDiary({
 
   return (
     <div className={`${styles.diaryPanel} ${styles.open}`}>
-      <button className={styles.closeButton} onClick={onClose}>
-        ✖
-      </button>
-      <div className={styles.diaryContainer}>
-        {/* 🗑 삭제 버튼 (오른쪽 상단) */}
-        <button
-          className={styles.deleteButton}
-          onClick={() => handleDelete(diaryData.date)}
-        >
-          🗑
+      <div className={styles.scrollContainer}>
+        <button className={styles.closeButton} onClick={onClose}>
+          ✖
         </button>
+        <div className={styles.diaryContainer}>
+          {/* 🗑 삭제 버튼 (오른쪽 상단) */}
+          <button
+            className={styles.deleteButton}
+            onClick={() => handleDelete(diaryData.date)}
+          >
+            🗑
+          </button>
 
-        {/* 📌 일기 제목 */}
-        <h2 className={styles.diaryTitle}>{diaryData.date} 일기</h2>
+          {/* 📌 일기 제목 */}
+          <h2 className={styles.diaryTitle}>{diaryData.date} 일기</h2>
 
-        {/* 📌 이모지 리스트 */}
-        <div className={styles.emojiSection}>
-          {allEmojis.map((emoji, index) => {
-            const imagePath = Object.keys(emojiMappings).find(
-              (key) => emojiMappings[key] === emoji
-            );
-            return imagePath ? (
-              <img
-                key={index}
-                src={imagePath}
-                alt={emoji}
-                className={styles.emojiImage}
-              />
-            ) : null;
-          })}
+          {/* 📌 이모지 리스트 */}
+          <div className={styles.emojiSection}>
+            {allEmojis.map((emoji, index) => {
+              const imagePath = Object.keys(emojiMappings).find(
+                (key) => emojiMappings[key] === emoji
+              );
+              return imagePath ? (
+                <img
+                  key={index}
+                  src={imagePath}
+                  alt={emoji}
+                  className={styles.emojiImage}
+                />
+              ) : null;
+            })}
+          </div>
+
+          {/* 📌 일기 내용 */}
+          {diaryData.diary && (
+            <p className={styles.diaryText}>{diaryData.diary}</p>
+          )}
+        </div>
+        <div className={styles.resultContent}>
+          <h2 className={styles.diaryTitle}>오늘의 OTT 컨텐츠</h2>
+          {/* 📌 추천 콘텐츠 컴포넌트 */}
+          <RecommendationContent
+            recommendContent={recommendContent}
+            resultEmotion={resultEmotion}
+          />
+
+          {/* 📌 체크박스와 추천 버튼 - 추천 콘텐츠가 null일 때만 표시 */}
+          {recommendContent === null && (
+            <>
+              <div className={styles.checkboxContainer}>
+                <label>
+                  구독하고 있는 플랫폼에서만
+                  <br />
+                  추천받을게요! &nbsp;&nbsp;
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={(e) => setIsChecked(e.target.checked)}
+                  />
+                </label>
+              </div>
+              <button
+                className={styles.recommendButton}
+                onClick={handleRecommend}
+              >
+                🎥 OTT 추천받기
+              </button>
+            </>
+          )}
         </div>
 
-        {/* 📌 일기 내용 */}
-        {diaryData.diary && (
-          <p className={styles.diaryText}>{diaryData.diary}</p>
-        )}
-
-        {/* 📌 추천 콘텐츠 컴포넌트 */}
-        <RecommendationContent
-          recommendContent={recommendContent}
-          resultEmotion={resultEmotion}
-        />
-
-        {/* 📌 체크박스와 추천 버튼 - 추천 콘텐츠가 null일 때만 표시 */}
-        {recommendContent === null && (
-          <>
-            <div className={styles.checkboxContainer}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={isChecked}
-                  onChange={(e) => setIsChecked(e.target.checked)}
-                />
-                구독하고 있는 플랫폼에서만 추천받을게요!
-              </label>
+        {/* 📌 추천 결과 팝업 */}
+        {showPopup && (
+          <div className={styles.recommendPopup}>
+            <p className={styles.title}>오늘의 추천 콘텐츠</p>
+            <div className={styles.recommendContent}>
+              <p>{recommendation}</p>
             </div>
             <button
-              className={styles.recommendButton}
-              onClick={handleRecommend}
+              className={styles.closeButton2}
+              onClick={async () => {
+                setShowPopup(false);
+                await fetchContentData(); // 영화 정보 가져오기
+              }}
             >
-              🎥 OTT 추천받기
+              다음 →
             </button>
-          </>
+          </div>
+        )}
+
+        {/* 📌 영화 포스터 팝업 */}
+        {contentData && (
+          <div className={styles.recommendPopup}>
+            <h3 className={styles.title}>오늘의 추천 영화</h3>
+            <div className={styles.posterContainer}>
+              <img
+                src={contentData.poster_url}
+                alt={contentData.title}
+                className={styles.posterImage}
+              />
+              <p className={styles.title}>{contentData.title}</p>
+            </div>
+            <button
+              className={styles.closeButton2}
+              onClick={handleRecommendationClose} // 함수 직접 연결
+            >
+              닫기
+            </button>
+          </div>
+        )}
+
+        {/* 📌 MBTI 없음 팝업 */}
+        {showMbtiPopup && (
+          <div className={styles.recommendPopup}>
+            <p>등록된 회원 MBTI가 없습니다. 회원정보를 수정해주세요.</p>
+            <button onClick={() => router.push("/profile")}>
+              회원정보 수정
+            </button>
+          </div>
         )}
       </div>
-
-      {/* 📌 추천 결과 팝업 */}
-      {showPopup && (
-        <div className={styles.recommendPopup}>
-          <p className={styles.title}>오늘의 추천 콘텐츠</p>
-          <div className={styles.recommendContent}>
-            <p>{recommendation}</p>
-          </div>
-          <button
-            className={styles.closeButton2}
-            onClick={async () => {
-              setShowPopup(false);
-              await fetchContentData(); // 영화 정보 가져오기
-            }}
-          >
-            다음 →
-          </button>
-        </div>
-      )}
-
-      {/* 📌 영화 포스터 팝업 */}
-      {contentData && (
-        <div className={styles.recommendPopup}>
-          <h3 className={styles.title}>오늘의 추천 영화</h3>
-          <div className={styles.contentContainer}>
-            <img
-              src={contentData.poster_url}
-              alt={contentData.title}
-              className={styles.posterImage}
-            />
-            <p className={styles.title}>{contentData.title}</p>
-          </div>
-          <button
-            className={styles.closeButton2}
-            onClick={handleRecommendationClose} // 함수 직접 연결
-          >
-            닫기
-          </button>
-        </div>
-      )}
-
-      {/* 📌 MBTI 없음 팝업 */}
-      {showMbtiPopup && (
-        <div className={styles.recommendPopup}>
-          <p>등록된 회원 MBTI가 없습니다. 회원정보를 수정해주세요.</p>
-          <button onClick={() => router.push("/profile")}>회원정보 수정</button>
-        </div>
-      )}
+      <LoadingPopup isOpen={loading} /> {/* 로딩 팝업 추가 */}
     </div>
   );
 }

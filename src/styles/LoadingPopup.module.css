@@ -1,0 +1,23 @@
+/* src/styles/LoadingPopup.module.css */
+.loading-popup {
+  position: fixed; /* 화면에 고정 */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+  display: flex;
+  justify-content: center; /* 수평 중앙 정렬 */
+  align-items: center; /* 수직 중앙 정렬 */
+  z-index: 1000; /* 다른 요소 위에 표시 */
+}
+
+.popup-content {
+  background: white;
+  padding: 20px;
+  font-size: 40px;
+  font-family: "wellstudy", sans-serif;
+  color: rgb(53, 58, 102);
+  border-radius: 10px;
+  text-align: center;
+}
