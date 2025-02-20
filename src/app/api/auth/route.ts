@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
 
   if (!code) {
     return NextResponse.json(
-      { error: "Authorization code is missing" },
+      { _error: "Authorization code is missing" },
       { status: 400 }
     );
   }

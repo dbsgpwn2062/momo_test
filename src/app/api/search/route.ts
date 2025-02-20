@@ -22,6 +22,7 @@ export async function GET(req: NextRequest) {
   const query = {
     size: PAGE_SIZE,
     from: from,
+    track_total_hits: true,
     query: {
       multi_match: {
         query: q,
@@ -46,6 +47,12 @@ export async function GET(req: NextRequest) {
     }
 
     const data = await response.json();
+    console.log("API Response:", {
+      total: data.hits.total,
+      page,
+      size: data.hits.hits.length,
+    });
+
     return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json(

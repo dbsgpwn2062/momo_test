@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { saveDiaryData } from "@/services/diary";
 import styles from "@/styles/DiaryForm.module.css";
+import styles1 from "@/styles/MainForm.module.css";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import EmojiPicker from "@/components/mainForm/EmojiPicker";
@@ -33,6 +34,7 @@ export default function DiaryForm({
   const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
   const [resetTrigger, setResetTrigger] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
+  const [showEmojiAlert, setShowEmojiAlert] = useState(false);
 
   const formattedDate = date
     ? dayjs(date).locale("ko").format("YYYY년 M월 D일 dddd")
@@ -60,6 +62,17 @@ export default function DiaryForm({
   const handleSave = async () => {
     if (!date) {
       alert("날짜를 선택하세요.");
+      return;
+    }
+
+    // ✅ 이모지 카테고리별 선택 여부 체크
+    if (
+      !selectedWeather ||
+      selectedEmojis.length === 0 ||
+      selectedDaily.length === 0 ||
+      selectedActivities.length === 0
+    ) {
+      setShowEmojiAlert(true);
       return;
     }
 
@@ -153,6 +166,31 @@ export default function DiaryForm({
           {isSaving ? "저장 중..." : "저장"}
         </button>
       </div>
+
+      {/* ✅ 이모지 부족 알림 팝업 */}
+      {showEmojiAlert && (
+        <div
+          className={styles1.popupOverlay}
+          onClick={() => setShowEmojiAlert(false)}
+        >
+          <div
+            className={styles1.popupContainer}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className={styles1.popupContainerh3}>알림</h3>
+            <p style={{ marginTop: "10px" }}>
+              모든 카테고리의 이모지를 선택해주세요!
+            </p>
+            <button
+              className={styles1.popupButton}
+              onClick={() => setShowEmojiAlert(false)}
+              style={{ marginTop: "20px" }}
+            >
+              확인
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

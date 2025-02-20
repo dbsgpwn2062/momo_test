@@ -4,6 +4,7 @@ import { useState } from "react";
 import Calendar, { CalendarProps } from "react-calendar";
 import dayjs from "dayjs";
 import styles from "@/styles/MainForm.module.css";
+import { getTokenFromCookies } from "@/services/auth";
 
 interface CalendarFormProps {
   onDateSelect: (date: Date) => void;
@@ -17,6 +18,7 @@ export default function CalendarForm({
   diaryEntries = {},
 }: CalendarFormProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [showLoginAlert, setShowLoginAlert] = useState(false);
 
   // ✅ 달 변경 감지 함수
   const handleActiveStartDateChange: CalendarProps["onActiveStartDateChange"] =
@@ -30,7 +32,15 @@ export default function CalendarForm({
       }
     };
 
-  const handleDateChange: CalendarProps["onChange"] = (value) => {
+  // ✅ 날짜 선택 시 로그인 체크
+  const handleDateChange: CalendarProps["onChange"] = async (value) => {
+    const token = await getTokenFromCookies();
+
+    if (!token) {
+      setShowLoginAlert(true);
+      return;
+    }
+
     if (value instanceof Date) {
       onDateSelect(value);
     }
@@ -88,6 +98,28 @@ export default function CalendarForm({
           return diaryEntries?.[dateKey] ? "highlight" : ""; // ✅ 작성된 일기 강조 표시
         }}
       />
+      {/* 로그인 필요 알림 팝업 */}
+      {showLoginAlert && (
+        <div
+          className={styles.popupOverlay}
+          onClick={() => setShowLoginAlert(false)}
+        >
+          <div
+            className={styles.popupContainer}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 style={{ marginBottom: "20px" }}>알림</h3>
+            <p>로그인이 필요한 서비스입니다.</p>
+            <button
+              className={styles.popupButton}
+              onClick={() => setShowLoginAlert(false)}
+              style={{ marginTop: "20px" }}
+            >
+              확인
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

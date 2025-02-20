@@ -7,7 +7,15 @@ import styles from "@/styles/LoadingPopup.module.css";
 // Lottie를 서버에서 제외
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
-const LoadingPopup = ({ isOpen }: { isOpen: boolean }) => {
+interface LoadingPopupProps {
+  isOpen: boolean;
+  message?: string; // 메시지를 props로 받을 수 있도록 추가
+}
+
+const LoadingPopup = ({
+  isOpen,
+  message = "momo가 답변을 작성 중이예요...",
+}: LoadingPopupProps) => {
   const [animationData, setAnimationData] = useState<any | null>(null);
   const [isClient, setIsClient] = useState(false);
 
@@ -28,7 +36,7 @@ const LoadingPopup = ({ isOpen }: { isOpen: boolean }) => {
     <div className={styles["loading-popup"]}>
       <div className={styles["popup-content"]}>
         <Lottie animationData={animationData} loop={true} />
-        <p>momo가 답변을 작성 중이예요...</p>
+        <p>{message}</p>
       </div>
     </div>
   );

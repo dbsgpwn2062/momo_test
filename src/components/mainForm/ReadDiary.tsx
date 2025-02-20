@@ -37,6 +37,8 @@ export default function ReadDiary({
     title: string;
     poster_url: string;
   } | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // ✅ 디버깅: `diaryData`가 올바르게 전달되는지 확인
   useEffect(() => {
@@ -45,30 +47,27 @@ export default function ReadDiary({
   }, [diaryData]);
 
   // ✅ 삭제 요청 함수
-  const handleDelete = async (date: string) => {
-    if (!date) {
-      alert("삭제할 일기 날짜가 없습니다.");
-      return;
-    }
-
-    const confirmDelete = window.confirm("정말로 이 일기를 삭제하시겠습니까?");
-    if (!confirmDelete) return;
-
-    setLoading(true);
+  const handleDelete = async () => {
+    setIsDeleting(true); // 삭제 시작
     try {
-      const res = await fetch(`/api/diary?date=${date}`, {
+      const confirmDelete = window.confirm(
+        "정말로 이 일기를 삭제하시겠습니까?"
+      );
+      if (!confirmDelete) return;
+
+      const res = await fetch(`/api/diary?date=${diaryData.date}`, {
         method: "DELETE",
       });
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || "삭제 실패");
 
       alert("일기가 성공적으로 삭제되었습니다.");
-      onDeleteSuccess(date);
+      await onDeleteSuccess(diaryData.date);
       onClose();
     } catch (error) {
       alert("일기 삭제 중 오류가 발생했습니다.");
     } finally {
-      setLoading(false);
+      setIsDeleting(false);
     }
   };
 
@@ -257,10 +256,7 @@ export default function ReadDiary({
         </button>
         <div className={styles.diaryContainer}>
           {/* 🗑 삭제 버튼 (오른쪽 상단) */}
-          <button
-            className={styles.deleteButton}
-            onClick={() => handleDelete(diaryData.date)}
-          >
+          <button className={styles.deleteButton} onClick={handleDelete}>
             🗑
           </button>
 
@@ -290,7 +286,7 @@ export default function ReadDiary({
           )}
         </div>
         <div className={styles.resultContent}>
-          <h2 className={styles.diaryTitle}>오늘의 OTT 컨텐츠</h2>
+          <h2 className={styles.diaryTitle}>오늘의 OTT 콘텐츠</h2>
           {/* 📌 추천 콘텐츠 컴포넌트 */}
           <RecommendationContent
             recommendContent={recommendContent}
@@ -325,7 +321,7 @@ export default function ReadDiary({
         {/* 📌 추천 결과 팝업 */}
         {showPopup && (
           <div className={styles.recommendPopup}>
-            <p className={styles.title}>오늘의 추천 콘텐츠</p>
+            <p className={styles.title}>오늘의 추천 OTT</p>
             <div className={styles.recommendContent}>
               <p>{recommendation}</p>
             </div>
@@ -343,8 +339,8 @@ export default function ReadDiary({
 
         {/* 📌 영화 포스터 팝업 */}
         {contentData && (
-          <div className={styles.recommendPopup}>
-            <h3 className={styles.title}>오늘의 추천 영화</h3>
+          <div className={styles.recommendPopup1}>
+            <h3 className={styles.title}>오늘의 추천 OTT</h3>
             <div className={styles.posterContainer}>
               <img
                 src={contentData.poster_url}
@@ -372,7 +368,10 @@ export default function ReadDiary({
           </div>
         )}
       </div>
-      <LoadingPopup isOpen={loading} /> {/* 로딩 팝업 추가 */}
+      <LoadingPopup isOpen={loading} message="momo가 답변을 작성 중이예요..." />
+      {isDeleting && (
+        <LoadingPopup isOpen={true} message="momo가 삭제 중입니다..." />
+      )}
     </div>
   );
 }

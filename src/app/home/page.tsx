@@ -22,6 +22,7 @@ export default function MainPage() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [showFutureAlert, setShowFutureAlert] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -159,12 +160,33 @@ export default function MainPage() {
     }
   };
 
+  // ✅ 날짜 선택 처리 함수 수정
+  const handleDateSelect = (date: Date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // 시간 제거하고 날짜만 비교
+
+    if (date > today) {
+      setShowFutureAlert(true); // 미래 날짜 선택 시 알림 표시
+      return;
+    }
+
+    setSelectedDate(date);
+    fetchDiaryData(dayjs(date).format("YYYY-MM-DD"))
+      .then((data) => {
+        setDiaryData(data);
+        setIsDiaryOpen(true);
+      })
+      .catch((error) => {
+        console.error("❌ 일기 데이터를 불러오는 데 실패:", error);
+      });
+  };
+
   return (
     <div className={styles.mainContainer}>
       <Header />
       <div className={styles.contentWrapper}>
         <CalendarForm
-          onDateSelect={setSelectedDate}
+          onDateSelect={handleDateSelect}
           onMonthChange={handleMonthChange}
           diaryEntries={diaryEntries}
         />
@@ -223,6 +245,29 @@ export default function MainPage() {
             onSave={handleSaveDiary}
           />
         ))}
+
+      {/* ✅ 미래 날짜 선택 알림 팝업 */}
+      {showFutureAlert && (
+        <div
+          className={styles.popupOverlay}
+          onClick={() => setShowFutureAlert(false)}
+        >
+          <div
+            className={styles.popupContainer}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 style={{ marginBottom: "20px" }}>알림</h3>
+            <p>미래의 일기는 작성할 수 없어요!</p>
+            <button
+              className={styles.popupButton}
+              onClick={() => setShowFutureAlert(false)}
+              style={{ marginTop: "20px" }}
+            >
+              확인
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

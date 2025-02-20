@@ -38,6 +38,7 @@
   -ms-overflow-style: none; /* IE, Edge */
   scrollbar-width: none; /* Firefox */
 }
+
 .diaryContainer {
   position: relative;
   background: white;
@@ -54,8 +55,22 @@
   margin-top: 100px;
 }
 
+.resultContent h3 {
+  font-size: 40px;
+  font-family: "wellstudy", sans-serif;
+  text-align: center;
+  margin-bottom: 20px;
+  margin-right: 13px;
+  margin-top: 20px;
+}
+
+.resultContent p {
+  font-size: 28px;
+  text-align: center;
+}
+
 .diaryTitle {
-  font-size: 30px;
+  font-size: 40px;
   font-family: "wellstudy", sans-serif;
   text-align: center;
   margin-bottom: 20px;
@@ -96,7 +111,7 @@
 }
 
 .diaryText {
-  font-size: 25px;
+  font-size: 32px;
   font-family: "Ryupig", sans-serif;
   margin-bottom: 10px;
   text-align: center;
@@ -164,7 +179,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background: rgba(50, 39, 39, 0.915);
-  width: 500px; /* ✅ 팝업 너비 고정 */
+  width: 45%; /* ✅ 팝업 너비 고정 */
   max-width: 80vw; /* ✅ 화면이 작을 경우 대비 */
   padding: 20px;
   border-radius: 10px;
@@ -172,7 +187,26 @@
   z-index: 1000;
   text-align: center;
   color: white;
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: 550;
+}
+
+.recommendPopup1 {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(50, 39, 39, 0.915);
+  width: 20%; /* ✅ 팝업 너비 고정 */
+  max-width: 80vw; /* ✅ 화면이 작을 경우 대비 */
+  min-width: 400px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.212);
+  z-index: 1000;
+  text-align: center;
+  color: white;
+  font-size: 20px;
   font-weight: 550;
 }
 
@@ -204,7 +238,7 @@
 .title {
   margin-bottom: 15px;
   font-weight: bold;
-  font-size: 25px;
+  font-size: 28px;
 }
 
 /* ✅ 스크롤바 스타일 조정 (선택 사항) */

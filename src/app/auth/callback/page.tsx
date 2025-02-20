@@ -17,7 +17,6 @@ export default function AuthCallback() {
       }
 
       try {
-        // ✅ Next.js API로 요청하여 쿠키에 토큰 저장
         const response = await fetch(`/api/auth?code=${code}`, {
           method: "POST",
         });
@@ -26,7 +25,7 @@ export default function AuthCallback() {
           throw new Error();
         }
 
-        router.push("/home"); // ✅ 로그인 완료 후 이동
+        router.push("/home");
       } catch {
         router.push("/home");
       }
@@ -35,5 +34,9 @@ export default function AuthCallback() {
     handleAuth();
   }, []);
 
-  return <div>로그인 처리 중...</div>;
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <h1 className="text-2xl font-bold">로그인 처리 중...</h1>
+    </div>
+  );
 }

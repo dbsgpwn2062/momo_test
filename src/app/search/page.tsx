@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation"; // ✅ URL에서 검색어 가져오기
+import Header from "@/components/ui/Header"; // Header 컴포넌트 import
 import SearchBar from "@/components/SearchForm/SearchBar";
 import MovieGrid from "@/components/SearchForm/MovieGrid";
 import "@/styles/search.css";
@@ -30,10 +31,13 @@ function SearchContent() {
 // 메인 페이지 컴포넌트
 export default function MovieSearchPage() {
   return (
-    <div className="searchPage">
-      <Suspense fallback={<div>Loading...</div>}>
-        <SearchContent />
-      </Suspense>
-    </div>
+    <>
+      <Header />
+      <div className="searchPage">
+        <Suspense fallback={<div>Loading...</div>}>
+          <SearchContent />
+        </Suspense>
+      </div>
+    </>
   );
 }

@@ -1,0 +1,45 @@
+.header {
+  text-align: center;
+  padding: 40px 20px;
+  font-weight: bold;
+  font-size: 25px;
+  margin-top: 100px;
+}
+
+.sliderSection {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.features {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 40px;
+}
+
+.feature {
+  flex: 1;
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background: rgb(78, 84, 135);
+  border-radius: 10px;
+}
+
+.cta {
+  text-align: center;
+  margin: 40px 0;
+}
+
+.ctaButton {
+  padding: 15px 30px;
+  font-size: 18px;
+  background: rgb(255, 131, 131);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

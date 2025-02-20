@@ -25,7 +25,7 @@ export default function MovieGrid({ searchQuery }: { searchQuery: string }) {
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
-  const PAGE_SIZE = 30; // ✅ 한 번에 불러오는 데이터 개수
+  const PAGE_SIZE = 25; // API route.ts와 동일한 값으로 설정
 
   // 🔄 검색어 변경 시 초기화
   useEffect(() => {
@@ -39,26 +39,32 @@ export default function MovieGrid({ searchQuery }: { searchQuery: string }) {
 
   // 📡 API 호출 (무한 스크롤 적용)
   const fetchMovies = async (pageNum: number, reset: boolean = false) => {
-    if (!hasMore) return;
+    if (!hasMore || loading) return; // loading 체크 추가
     setLoading(true);
+    console.log(`Fetching movies for page: ${pageNum}`);
 
     try {
       const res = await fetch(`/api/search?q=${searchQuery}&page=${pageNum}`);
       const data = await res.json();
+      console.log("API Response:", data);
       const newMovies: Movie[] = data.hits.hits || [];
+      console.log("New Movies length:", newMovies.length);
 
       setMovies((prev) => {
         const mergedMovies: Movie[] = reset
           ? newMovies
           : [...prev, ...newMovies];
-        const uniqueMovies: Movie[] = Array.from(
-          new Map(mergedMovies.map((m) => [m._id, m])).values()
-        );
-        return uniqueMovies;
+        console.log("Merged Movies length:", mergedMovies.length);
+        return mergedMovies; // 중복 제거 로직 제거
       });
 
-      setHasMore(newMovies.length === PAGE_SIZE);
-      setPage(pageNum + 1); // ✅ 다음 페이지 증가
+      // hasMore 상태 업데이트 로직 수정
+      const total = data.hits.total.value;
+      const hasMoreItems = (pageNum + 1) * PAGE_SIZE < total;
+      console.log("Has more items:", hasMoreItems, "Total:", total);
+      setHasMore(hasMoreItems);
+
+      setPage(pageNum + 1);
     } catch (error) {
       console.error("Error fetching movies:", error);
     } finally {
@@ -69,19 +75,20 @@ export default function MovieGrid({ searchQuery }: { searchQuery: string }) {
   // 🎢 무한 스크롤 감지 이벤트
   useEffect(() => {
     const handleScroll = () => {
-      if (
-        window.innerHeight + window.scrollY >=
-          document.body.offsetHeight - 300 &&
-        !loading &&
-        hasMore
-      ) {
+      const scrollPosition = window.innerHeight + window.scrollY;
+      const threshold = document.body.offsetHeight - 300;
+
+      console.log("Scroll Position:", scrollPosition, "Threshold:", threshold);
+
+      if (scrollPosition >= threshold && !loading && hasMore) {
+        console.log("Loading more movies... Page:", page);
         fetchMovies(page);
       }
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [loading, hasMore]);
+  }, [loading, hasMore, page, searchQuery]); // searchQuery 의존성 추가
 
   // 🎬 팝업 닫기 함수 (배경 클릭 또는 ESC 키)
   const closePopup = () => setSelectedMovie(null);
@@ -95,32 +102,35 @@ export default function MovieGrid({ searchQuery }: { searchQuery: string }) {
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
+  // movies 상태가 변경될 때마다 로그 출력
+  useEffect(() => {
+    console.log("Movies state updated:", movies);
+  }, [movies]);
+
   return (
     <div className="movie-container">
-      {loading && <p></p>}
+      {loading && <p>Loading...</p>}
 
       <div className="movie-grid">
         {movies.length > 0 ? (
-          movies.map((movie) => (
-            <div
-              key={movie._id}
-              className="movie-card"
-              onClick={() => setSelectedMovie(movie)}
-            >
-              {/* 🎬 영화 포스터 */}
-              <img
-                src={movie._source.poster_url}
-                alt={movie._source.title}
-                className="movie-poster"
-              />
-
-              {/* 🎬 영화 제목 */}
-              <h3 className="movie-title">{movie._source.title}</h3>
-
-              {/* 🏷️ 플랫폼 정보 */}
-              <p className="movie-platform">{movie._source.platform}</p>
-            </div>
-          ))
+          movies.map((movie) => {
+            console.log("Rendering movie:", movie._source); // 각 영화 데이터 확인
+            return (
+              <div
+                key={movie._id}
+                className="movie-card"
+                onClick={() => setSelectedMovie(movie)}
+              >
+                <img
+                  src={movie._source.poster_url}
+                  alt={movie._source.title}
+                  className="movie-poster"
+                />
+                <h3 className="movie-title">{movie._source.title}</h3>
+                <p className="movie-platform">{movie._source.platform}</p>
+              </div>
+            );
+          })
         ) : (
           <p>검색 결과 없음</p>
         )}
