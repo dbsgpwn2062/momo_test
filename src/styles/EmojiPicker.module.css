@@ -19,6 +19,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
+  padding-left: 10px;
   justify-content: flex-start;
 }
 
@@ -36,6 +37,6 @@
 
 /* ✅ 선택된 이모지 효과 (이미지 자체 모양으로 테두리 생성) */
 .emojiImage.selected {
-  filter: drop-shadow(0px 0px 3px blue);
-  transform: scale(1.1);
+  filter: drop-shadow(2px 2px 1px rgb(0, 0, 0));
+  transform: scale(1.2);
 }
