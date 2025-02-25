@@ -1,0 +1,193 @@
+/* 📌 검색바 */
+.search-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.8); /* ✅ 투명한 검정 배경 */
+  padding: 15px 0;
+  z-index: 1000;
+}
+
+/* ✅ 검색창과 리스트가 겹치지 않도록 여백 추가 */
+.movie-container {
+  margin-top: 90px; /* ✅ 검색바 높이만큼 여백 추가 */
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 12px 15px;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  background-color: white; /* ✅ 검색창 배경 */
+  color: black;
+  text-align: center;
+  outline: none;
+}
+
+.search-btn {
+  background-color: gold;
+  color: black;
+  padding: 12px 15px;
+  border: none;
+  cursor: pointer;
+  border-radius: 25px;
+  font-size: 16px;
+}
+
+.search-btn:hover {
+  background-color: darkgoldenrod;
+}
+
+/* 🎬 반응형 영화 그리드 */
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(180px, 1fr)
+  ); /* ✅ 자동 조정 */
+  gap: 15px; /* ✅ 카드 간격 조정 */
+  padding: 20px;
+  justify-content: center;
+  max-width: 1200px; /* ✅ 최대 너비 설정 */
+  margin: 0 auto; /* ✅ 중앙 정렬 */
+}
+
+/* ✅ 반응형 조정 (태블릿: 3열, 모바일: 2열) */
+@media (max-width: 1024px) {
+  .movie-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .movie-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}
+
+/* 🎬 영화 카드 */
+.movie-card {
+  background-color: #222;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  transition: transform 0.2s;
+  width: 100%;
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+}
+
+/* 🎥 영화 포스터 */
+.movie-poster {
+  width: 100%;
+  height: 250px; /* ✅ 동일한 높이 설정 */
+  object-fit: cover; /* ✅ 이미지가 짤리지 않도록 설정 */
+  border-radius: 10px;
+}
+
+/* 🎬 영화 제목 */
+.movie-title {
+  font-size: 16px;
+  color: white; /* ✅ 가독성 향상 */
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+/* 🏷️ 플랫폼 정보 */
+.movie-platform {
+  font-size: 14px;
+  color: #ffcc00; /* ✅ 더 눈에 띄는 색상 */
+  font-weight: bold;
+}
+
+/* 📅 영화 연도 */
+.movie-year {
+  font-size: 14px;
+  color: lightgray;
+}
+
+/* 🔘 상세 보기 버튼 */
+
+.details-btn:hover {
+  background-color: darkgoldenrod;
+}
+
+/* 🎬 영화 상세 팝업 */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* ✅ 어두운 투명 배경 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+/* 📌 팝업 내부 스타일 */
+.popup-content {
+  background-color: #ffffff; /* ✅ 밝은 배경 */
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+  width: 90%;
+  text-align: left;
+  color: black;
+  font-size: 16px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  position: relative; /* ✅ 닫기 버튼 위치 설정 */
+}
+
+/* 🎬 팝업 제목 */
+.popup-content h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: black;
+}
+
+/* 📌 팝업 내 정보 스타일 */
+.popup-content p {
+  margin: 8px 0;
+  font-size: 16px;
+  color: black;
+}
+
+.popup-content strong {
+  font-weight: bold;
+  color: darkgoldenrod;
+}
+
+/* ❌ 닫기 버튼 */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 5px;
+}
+
+.close-btn:hover {
+  background: darkred;
+}

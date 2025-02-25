@@ -1,0 +1,316 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+@layer base {
+  @font-face {
+    font-family: "kimbeaesun";
+    src: url("/fonts/kimbeansun.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "Wellstudy";
+    src: url("/fonts/wellstudy.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "Ryupig";
+    src: url("/fonts/ryupig.woff2") format("woff2");
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  background-color: #ffffff;
+  font-family: "Arial", sans-serif;
+}
+
+.Nanum {
+  font-family: "Nanum", sans-serif;
+}
+
+.kimbaesun {
+  font-family: "kimbeaesun", sans-serif;
+}
+
+.wellstudio {
+  font-family: "Wellstudy", sans-serif;
+}
+
+.ryupig {
+  font-family: "Ryupig", sans-serif;
+}
+
+/* -----캘린더 스타일---- */
+.react-calendar {
+  font-family: "Ryupig", sans-serif;
+  font-weight: 1500;
+  width: 100%;
+  max-width: 1500px;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 50px;
+  border-radius: 10px;
+  aspect-ratio: 15 / 9;
+  background-image: url("/calendar/calendar_bg.png"); /* 배경 이미지 추가 */
+  background-size: cover; /* 이미지가 컨테이너를 꽉 채우도록 */
+  background-position: center; /* 이미지 중앙 정렬 */
+  background-repeat: no-repeat; /* 이미지 반복 없음 */
+}
+
+/* 요일 헤더 스타일 */
+.react-calendar__month-view__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  font-weight: bold;
+  text-align: center;
+  font-size: 25px;
+  font-weight: 900;
+  padding: 5px 0;
+  background: rgb(255, 132, 132);
+  border-bottom: 2px solid #ddd;
+  border-radius: 5px;
+}
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none; /* 밑줄 제거 */
+  text-underline-position: unset; /* 밑줄 위치 제거 */
+  -webkit-text-decoration: none; /* Safari 지원 */
+  cursor: default; /* 커서 기본값으로 변경 */
+}
+/* 토요일과 일요일 요일 색상 */
+.react-calendar__month-view__weekdays__weekday:nth-child(1) abbr {
+  color: rgb(159, 0, 0);
+}
+
+/* 토요일 (파란색) */
+.react-calendar__month-view__weekdays__weekday:nth-child(7) abbr {
+  color: blue;
+}
+
+/* 날짜 칸 기본 스타일 */
+.react-calendar__month-view__days {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  gap: 3px;
+}
+
+/* 개별 날짜 스타일 */
+.react-calendar__tile {
+  font-family: "Wellstudy", sans-serif;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  flex-direction: row;
+  aspect-ratio: 15 / 10;
+  font-size: 20px;
+  text-align: left;
+  border-radius: 5px;
+  border: 4px solid #eeeeee;
+  cursor: pointer;
+  margin: 2px;
+  padding: 0px;
+  position: relative;
+}
+
+.react-calendar__tile abbr {
+  display: inline-block; /* 테두리 적용을 위해 inline-block으로 변경 */
+  border: 2px;
+  border-radius: 50%; /* 동그랗게 테두리 */
+  padding: 3px; /* 숫자 주위 공간 확보 */
+  width: 20%;
+}
+
+.react-calendar__month-view__days {
+  border-top: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+}
+
+/* 이전/다음 달 날짜 흐리게 */
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: rgba(128, 128, 128, 0.4);
+}
+
+/* 토요일과 일요일에 흐리지만 색상을 유지 */
+
+.react-calendar__month-view__days__day:not(
+    .react-calendar__month-view__days__day--neighboringMonth
+  ):nth-child(7n + 1)
+  abbr {
+  color: red !important;
+}
+
+/* 이번 달 날짜 중 토요일(파란색) */
+.react-calendar__month-view__days__day:not(
+    .react-calendar__month-view__days__day--neighboringMonth
+  ):nth-child(7n)
+  abbr {
+  color: blue !important;
+}
+
+/* 지난달/다음달의 토요일(흐린 파랑) */
+.react-calendar__month-view__days__day--neighboringMonth:nth-child(7n) abbr {
+  color: rgba(0, 0, 255, 0.3) !important;
+}
+
+/* 지난달/다음달의 일요일(흐린 빨강) */
+.react-calendar__month-view__days__day--neighboringMonth:nth-child(7n + 1)
+  abbr {
+  color: rgba(255, 0, 0, 0.3) !important;
+}
+/* 네비게이션 스타일 */
+.react-calendar__navigation {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  background: rgb(68, 75, 132);
+  color: #ffffff;
+  position: relative;
+  border-radius: 10px;
+}
+
+/* 네비게이션 버튼 기본 스타일 */
+.react-calendar__navigation button {
+  background: none;
+  border: none;
+  font-size: 40px;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+/* 연도 이동 버튼 (양끝 배치) */
+/* << 버튼 왼쪽 배치 */
+.react-calendar__navigation button:nth-child(1) {
+  left: 10px;
+}
+
+/* >> 버튼 오른쪽 배치 */
+.react-calendar__navigation button:nth-child(5) {
+  right: 10px;
+}
+
+/* 월 이동 버튼을 연도+월 텍스트와 붙이기 */
+.react-calendar__navigation button:nth-child(2), /* < */
+.react-calendar__navigation button:nth-child(4)  /* > */ {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  padding-right: 80px;
+  padding-left: 80px;
+}
+
+/* < 버튼을 연도+월 텍스트 왼쪽에 배치 */
+.react-calendar__navigation button:nth-child(2) {
+  margin-right: 10px;
+}
+
+/* > 버튼을 연도+월 텍스트 오른쪽에 배치 */
+.react-calendar__navigation button:nth-child(4) {
+  margin-left: 10px;
+}
+
+/* 중앙 월-연도 표시 */
+.react-calendar__navigation__label {
+  flex-grow: 1;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* 월 이동 버튼을 연도+월 텍스트와 붙이기 */
+
+/* 오늘 날짜 스타일 */
+.react-calendar__tile--now {
+  background: none !important; /* 기존 배경 제거 */
+  color: inherit !important; /* 다른 날짜와 동일한 색상 유지 */
+  border-radius: 0 !important;
+  position: relative;
+}
+
+/* 오늘 날짜 숫자 아래 동그라미 */
+/* 오늘 날짜 스타일 */
+.react-calendar__tile--now {
+  background: none !important; /* 기존 배경 제거 */
+  color: inherit !important; /* 다른 날짜와 동일한 색상 유지 */
+  border-radius: 5px !important;
+  position: relative;
+}
+
+/* 오늘 날짜 숫자 옆에 'today!' 표시 */
+.react-calendar__tile--now abbr::after {
+  content: " today!";
+  font-size: 25px;
+  color: rgb(255, 131, 131); /* 노란색 */
+  margin-left: 5px; /* 숫자와 간격 */
+}
+
+/* 기존 클릭한 날짜의 배경 없애기 */
+.react-calendar__tile--active {
+  background: transparent !important;
+  color: inherit !important;
+  border: 5px solid #1f1d2c !important; /* ✅ 회색 테두리 추가 */
+  border-radius: 5px;
+}
+
+/* 선택된 날짜가 시작 또는 끝일 때 (중복 방지) */
+.react-calendar__tile--rangeStart,
+.react-calendar__tile--rangeEnd {
+  background: transparent !important;
+  border: 2px solid #ddd !important;
+}
+
+/* 작성 완료된 날짜 스타일 */
+.highlight {
+  position: relative;
+  color: black;
+}
+
+/* 오른쪽 하단에 작은 원으로 표시 */
+.highlight::after {
+  content: ""; /* 텍스트 제거 */
+  position: absolute;
+  bottom: 3px; /* ✅ 오른쪽 하단 정렬 */
+  right: 0px;
+  width: 60%; /* 이미지 크기 설정 */
+  height: 60%;
+  background-image: url("/calendar/done_blue.png");
+  background-size: contain; /* 이미지 크기 조절 */
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-left: auto;
+}
+
+/*---Diary----*/
+
+/* 반응형 대응 */
+@media screen and (max-width: 600px) {
+  .react-calendar {
+    max-width: 100%;
+  }
+
+  .react-calendar__tile {
+    height: 60px;
+    font-size: 14px;
+  }
+}
+

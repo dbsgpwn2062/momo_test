@@ -1,0 +1,43 @@
+{
+  "name": "my-next-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "postinstall": "chmod +x node_modules/.bin/next"
+  },
+  "dependencies": {
+    "amazon-cognito-identity-js": "^6.3.12",
+    "chart.js": "^4.4.7",
+    "cookie": "^1.0.2",
+    "dayjs": "^1.11.13",
+    "jwt-decode": "^4.0.0",
+    "lottie-react": "^2.4.1",
+    "next": "15.1.6",
+    "react": "^19.0.0",
+    "react-calendar": "^5.1.0",
+    "react-chartjs-2": "^5.3.0",
+    "react-dom": "^19.0.0",
+    "react-slick": "^0.30.3",
+    "slick-carousel": "^1.8.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@types/chart.js": "^2.9.41",
+    "@types/js-cookie": "^3.0.6",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-calendar": "^3.9.0",
+    "@types/react-dom": "^19",
+    "@types/react-slick": "^0.23.13",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9",
+    "eslint-config-next": "15.1.6",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5"
+  }
+}

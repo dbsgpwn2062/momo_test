@@ -1,0 +1,151 @@
+.chatbot {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  z-index: 1000;
+}
+/* :별2: 챗봇 헤더 */
+.chat-header {
+  background: rgb(255, 131, 131);
+  color: white;
+  padding: 15px;
+  font-size: 20px;
+  font-weight: bold;
+  position: relative;
+  padding-left: 40%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+/* :별2: 첫 메시지와 카테고리 버튼 컨테이너 */
+.chat-first-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+}
+/* :별2: 첫 메시지 */
+.chat-first-message {
+  display: flex;
+  align-self: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+/* :별2: momo 아이콘 */
+.message-momo {
+  width: 60px;
+  height: 60px;
+}
+/* :흰색_확인_표시: 채팅 메시지 컨테이너 */
+.chat-message-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 100%;
+}
+/* :흰색_확인_표시: 챗봇 메시지 (왼쪽 정렬) */
+.chat-message-container.bot {
+  justify-content: flex-start;
+}
+.chat-message.bot {
+  background-color: #ffd3b6;
+  color: black;
+  padding: 10px 14px;
+  border-radius: 5px;
+  font-size: 25px;
+  max-width: 75%;
+  align-self: flex-start;
+  border-bottom-left-radius: 2px;
+}
+/* :흰색_확인_표시: 사용자 메시지 (오른쪽 정렬) */
+.chat-message-container.user {
+  justify-content: flex-end;
+}
+.chat-message.user {
+  background-color: rgb(255, 131, 131);
+  color: white;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 25px;
+  max-width: 75%;
+  align-self: flex-end;
+  border-bottom-right-radius: 2px;
+}
+/* :흰색_확인_표시: 첫 메시지 바로 아래에 카테고리 버튼 */
+.chat-category-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 5px;
+}
+/* :별2: 카테고리 버튼 */
+.chat-category-button {
+  background-color: rgb(255, 131, 131);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s;
+  min-width: 100px;
+  text-align: center;
+}
+.chat-category-button:hover {
+  background: rgb(255, 131, 131);
+}
+/* :흰색_확인_표시: 메시지 리스트 */
+.chat-messages {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+}
+/* :별2: 입력창 */
+.chat-input-container {
+  display: flex;
+  padding: 10px;
+  background: white;
+  border-top: 1px solid #ddd;
+}
+.chat-input {
+  flex-grow: 1;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 25px;
+  outline: none;
+}
+.chat-send-btn {
+  background: rgb(255, 131, 131);
+  width: 70px;
+  color: white;
+  border: none;
+  padding: 8px;
+  margin-left: 10px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.chat-send-btn:hover {
+  background: rgb(255, 131, 131);
+}
+.chat-send-btn::after {
+  content: "📩";
+  font-size: 25px;
+  margin-left: 1px;
+}
+/* :별2: 메시지 스타일 */
+.chat-bubble {
+  background-color: #ffd3b6;
+  color: black;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 23px;
+  max-width: 75%;
+}

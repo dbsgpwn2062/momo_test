@@ -1,0 +1,180 @@
+.mainContainer {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  background-color: #ffffff;
+  padding-top: 64px;
+}
+
+.contentWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0; /* gap 제거 */
+  width: 100%;
+  height: calc(100vh - 100px);
+  margin-top: 100px;
+  padding: 0; /* 패딩 제거 */
+  box-sizing: border-box;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+.calendarContainer {
+  flex: 0 0 65%;
+  max-width: 1200%;
+  min-width: 800px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-bottom: 2rem;
+}
+
+.sidebarContainer {
+  flex: 0 0 30%; /* flex-grow를 1로 설정하여 남은 공간 모두 차지 */
+  height: 100%; /* 전체 높이 차지 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem; /* 컴포넌트 간 간격 조정 */
+  padding: 2rem 0;
+}
+
+.chatbotButton {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+}
+/* :별2: 말풍선 스타일 */
+.chatbotBubble {
+  width: 100px; /* :흰색_확인_표시: 버튼 크기 */
+  height: 100px;
+  background-image: url("/utils/chatbot.png");
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+/* :흰색_확인_표시: 말풍선 꼬리 */
+.chatbotTail {
+  position: absolute;
+  bottom: -15px;
+  left: 15px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 15px solid white;
+  border-bottom: none;
+  transform: rotate(10deg);
+}
+/* :별2: 챗봇 텍스트 */
+.chatbotText {
+  font-size: 17px;
+  font-weight: bold;
+  color: #3a3a3a;
+  text-align: center;
+  font-family: "Ryupig" sans-serif;
+}
+/* :별2: 챗봇 팝업 배경 (오버레이) */
+.chatbotOverlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 50vw; /* :흰색_확인_표시: 전체 화면의 오른쪽 절반 차지 */
+  height: 100vh;
+  display: flex;
+  justify-content: center; /* :흰색_확인_표시: 오른쪽 영역 내에서 중앙 정렬 */
+  align-items: center; /* :흰색_확인_표시: 세로 중앙 정렬 */
+  z-index: 999;
+}
+/* :별2: 챗봇 팝업 창 */
+.chatbotPopup {
+  width: 60%; /* :흰색_확인_표시: 기존 크기 유지 */
+  height: 80%; /* :흰색_확인_표시: 기존 크기 유지 */
+  background: white;
+  border-radius: 20px;
+  box-shadow: -4px 0px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: slideIn 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+}
+/* :별2: 챗봇 팝업 애니메이션 */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+/* :별2: 챗봇 섹션 (팝업과 맞추기) */
+.chatbot-section {
+  flex: 1;
+  display: flex;
+  justify-content: center; /* :흰색_확인_표시: 오른쪽 중앙에 배치 */
+  align-items: center;
+  background: transparent;
+}
+
+/* ✅ 팝업 오버레이 */
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+/* ✅ 팝업 컨테이너 */
+.popupContainer {
+  background-color: white;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  max-width: 400px;
+  font-size: 18px;
+  font-weight: bold;
+  width: 90%;
+}
+
+.popupContainer h3 {
+  font-size: 23px;
+  font-weight: bold;
+}
+
+/* ✅ 팝업 버튼 */
+.popupButton {
+  background-color: #ff5f5f;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.popupButton:hover {
+  background-color: #e04e4e;
+}

@@ -1,0 +1,268 @@
+.diaryPanel {
+  position: fixed;
+  top: 0;
+  right: 100%; /* 초기에는 화면 밖에 위치 */
+  width: 40%;
+  height: 100%;
+  background: white;
+  transition: right 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  padding: 60px;
+  z-index: 1000;
+  overflow-y: auto; /* ✅ 세로 스크롤 추가 */
+  max-height: 100vh; /* ✅ 전체 화면 높이 */
+
+  background-image: url("/diary/diary1.png");
+  background-size: 100% 100%; /* 폼에 완전히 맞추기 */
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.diaryPanel.open {
+  right: 0; /* ✅ 이 값이 있어야 패널이 화면에 나타남 */
+}
+
+.scrollContainer {
+  flex: 1;
+  margin-top: 80px;
+  overflow-y: auto; /* ✅ 내부 요소만 스크롤 가능 */
+  max-height: calc(100vh - 160px); /* ✅ 부모 높이에서 padding 값 제외 */
+  padding-right: 10px; /* ✅ 스크롤바와 간격 */
+}
+.scrollContainer::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.scrollContainer {
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.diaryContainer {
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 100px;
+}
+
+.resultContent {
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 100px;
+}
+
+.resultContent h3 {
+  font-size: 40px;
+  font-family: "wellstudy", sans-serif;
+  text-align: center;
+  margin-bottom: 20px;
+  margin-right: 13px;
+  margin-top: 20px;
+}
+
+.resultContent p {
+  font-size: 28px;
+  text-align: center;
+}
+
+.diaryTitle {
+  font-size: 40px;
+  font-family: "wellstudy", sans-serif;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.deleteButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: rgb(56, 0, 0);
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 10px;
+  padding-left: 6px;
+  padding-right: 5px;
+  border: 2px solid rgb(56, 0, 0);
+  border-radius: 5px;
+}
+
+.emojiSection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  margin-top: 30px;
+}
+
+.emojiImage {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.diaryText {
+  font-size: 32px;
+  font-family: "Ryupig", sans-serif;
+  margin-bottom: 10px;
+  text-align: center;
+  padding-left: 15%;
+  padding-right: 15%;
+}
+
+.closeButton {
+  position: fixed; /* ✅ 화면 기준으로 고정 */
+  top: 100px; /* ✅ 화면의 상단에서 20px 떨어짐 */
+  right: 100px; /* ✅ 화면의 오른쪽에서 30px 떨어짐 */
+  width: 30px;
+  height: 30px;
+  background-color: red; /* 빨간색 */
+  color: white; /* X 색상 */
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  border: none;
+  border-radius: 5px; /* 모서리 둥글게 */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* ✅ 다른 요소보다 위에 배치 */
+}
+.closeButton:hover {
+  background-color: rgb(139, 1, 1);
+}
+
+.checkboxContainer {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.checkboxContainer label {
+  font-size: 18px;
+  margin: 10px 0;
+  font-family: "Nanum", sans-serif;
+}
+
+.checkboxContainer input {
+  width: 17px;
+  height: 17px;
+}
+
+.recommendButton {
+  display: block;
+  margin: 10px auto;
+  padding: 10px;
+  font-weight: bold;
+  font-family: "Nanum", sans-serif;
+  margin-top: 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.recommendPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(50, 39, 39, 0.915);
+  width: 45%; /* ✅ 팝업 너비 고정 */
+  max-width: 80vw; /* ✅ 화면이 작을 경우 대비 */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.212);
+  z-index: 1000;
+  text-align: center;
+  color: white;
+  font-size: 20px;
+  font-weight: 550;
+}
+
+.recommendPopup1 {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(50, 39, 39, 0.915);
+  width: 20%; /* ✅ 팝업 너비 고정 */
+  max-width: 80vw; /* ✅ 화면이 작을 경우 대비 */
+  min-width: 400px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.212);
+  z-index: 1000;
+  text-align: center;
+  color: white;
+  font-size: 20px;
+  font-weight: 550;
+}
+
+.recommendContent {
+  max-height: 400px; /* ✅ 내부 콘텐츠 최대 높이 지정 */
+  overflow-y: auto; /* ✅ 내용이 넘칠 때만 스크롤 생성 */
+  padding-right: 10px; /* ✅ 스크롤바가 겹치지 않도록 여백 추가 */
+  text-align: center;
+}
+
+.closeButton2 {
+  background-color: #4a2929; /* ✅ 다크 브라운 */
+  color: white; /* ✅ 흰색 글자 */
+  border: none;
+  padding: 10px 20px; /* ✅ 적당한 여백 */
+  border-radius: 10px; /* ✅ 둥근 모서리 */
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background 0.2s ease-in-out;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* ✅ 약간의 그림자 */
+}
+
+.closeButton2:hover {
+  background-color: #1e0600; /* ✅ 마우스 올렸을 때 좀 더 어두운 브라운 */
+}
+
+.title {
+  margin-bottom: 15px;
+  font-weight: bold;
+  font-size: 28px;
+}
+
+/* ✅ 스크롤바 스타일 조정 (선택 사항) */
+.recommendContent::-webkit-scrollbar {
+  width: 6px; /* 스크롤바 너비 */
+}
+
+.recommendContent::-webkit-scrollbar-thumb {
+  background: #888; /* 스크롤바 색상 */
+  border-radius: 3px;
+}
+
+.recommendContent::-webkit-scrollbar-thumb:hover {
+  background: #555; /* 마우스 올렸을 때 */
+}
+
+.posterContainer {
+  display: flex; /* Flexbox 사용 */
+  flex-direction: column; /* 세로 방향으로 정렬 */
+  align-items: center; /* 수평 중앙 정렬 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+.posterImage {
+  max-width: 100%; /* 이미지가 부모 요소를 넘지 않도록 설정 */
+  height: auto; /* 비율 유지 */
+}
