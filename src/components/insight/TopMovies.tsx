@@ -45,28 +45,45 @@ export function TopMovies({ movies, mbtiType }: TopMoviesProps) {
       <div className={styles.cardContainer}>
         {movies.map((movie, i) => {
           const position = i - index;
-          let xOffset = position * 220;
+          let xOffset = position * 300;
+
           let scale = position === 0 ? 1.2 : 0.7;
           let zIndex = position === 0 ? 10 : 5;
           let opacity = Math.abs(position) > 1 ? 0 : 1;
+
+          let blur = position === 0 ? 0 : 2;
 
           return (
             <motion.div
               key={movie.title}
               className={styles.movieCard}
-              style={{
-                backgroundImage: `url(${movie.poster_url})`,
-              }}
               initial={{ opacity: 0 }}
               animate={{
-                x: xOffset,
+                x: xOffset - 115,
                 scale: scale,
                 opacity: opacity,
                 zIndex: zIndex,
+                filter: `blur(${blur}px)`, // 흐림 효과 적용
               }}
-              transition={{ type: "spring", stiffness: 250, damping: 20 }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 25,
+                filter: { duration: 0.2 },
+              }}
             >
+              <div
+                className={styles.posterContainer}
+                style={{
+                  backgroundImage: `url(${movie.poster_url})`,
+                }}
+              />
               <div className={styles.movieTitle}>{movie.title}</div>
+              <img
+                src={`/rank/${i + 1}th.png`}
+                alt={`Rank ${i + 1}`}
+                className={styles.rankImage}
+              />
             </motion.div>
           );
         })}
