@@ -1,11 +1,12 @@
 "use client";
 
-import React from "react";
-import styles from "@/styles/TopMovie.module.css"; // CSS 모듈 임포트
+import { motion } from "framer-motion";
+import { useState } from "react";
+import styles from "@/styles/TopMovies.module.css";
 
 interface Movie {
-  poster_url: string;
   title: string;
+  poster_url: string;
 }
 
 interface TopMoviesProps {
@@ -14,20 +15,61 @@ interface TopMoviesProps {
 }
 
 export function TopMovies({ movies, mbtiType }: TopMoviesProps) {
+  const [index, setIndex] = useState(0);
+
+  if (movies.length === 0) {
+    return <p className="text-center text-gray-500">추천 영화가 없습니다.</p>;
+  }
+
+  const nextCard = () => {
+    setIndex((prev) => (prev + 1) % movies.length);
+  };
+
+  const prevCard = () => {
+    setIndex((prev) => (prev - 1 + movies.length) % movies.length);
+  };
+
   return (
-    <div className={styles.container1}>
+    <div
+      className={styles.container}
+      onClick={(e) => {
+        if (e.clientX > window.innerWidth / 2) {
+          nextCard();
+        } else {
+          prevCard();
+        }
+      }}
+    >
       <h2 className={styles.title}>오늘 {mbtiType}의 추천 영화 순위</h2>
-      <div className="flex gap-4 overflow-x-auto p-4">
-        {movies.map((movie, index) => (
-          <div key={index} className={styles.movieCard}>
-            <img
-              src={movie.poster_url}
-              alt={movie.title}
-              className={styles.movieImage}
-            />
-            <p className={styles.movieTitle}>{movie.title}</p>
-          </div>
-        ))}
+
+      <div className={styles.cardContainer}>
+        {movies.map((movie, i) => {
+          const position = i - index;
+          let xOffset = position * 220;
+          let scale = position === 0 ? 1.2 : 0.7;
+          let zIndex = position === 0 ? 10 : 5;
+          let opacity = Math.abs(position) > 1 ? 0 : 1;
+
+          return (
+            <motion.div
+              key={movie.title}
+              className={styles.movieCard}
+              style={{
+                backgroundImage: `url(${movie.poster_url})`,
+              }}
+              initial={{ opacity: 0 }}
+              animate={{
+                x: xOffset,
+                scale: scale,
+                opacity: opacity,
+                zIndex: zIndex,
+              }}
+              transition={{ type: "spring", stiffness: 250, damping: 20 }}
+            >
+              <div className={styles.movieTitle}>{movie.title}</div>
+            </motion.div>
+          );
+        })}
       </div>
     </div>
   );

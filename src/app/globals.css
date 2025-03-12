@@ -62,7 +62,9 @@ body {
   max-width: 1500px;
   border-radius: 10px;
   padding: 20px;
-  margin: 50px;
+  margin-top: 250px;
+  margin-right: 80px;
+  margin-left: 30px;
   border-radius: 10px;
   aspect-ratio: 15 / 9;
   background-image: url("/calendar/calendar_bg.png"); /* 배경 이미지 추가 */
@@ -313,4 +315,3 @@ body {
     font-size: 14px;
   }
 }
-

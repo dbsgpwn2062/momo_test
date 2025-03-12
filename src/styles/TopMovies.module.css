@@ -1,0 +1,65 @@
+.container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 24rem;
+  width: 80%;
+  background-color: rgb(230, 230, 230);
+}
+
+.title {
+  position: absolute;
+  top: 1rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: rgb(31 41 55);
+  margin-bottom: 1rem;
+}
+
+.cardContainer {
+  position: relative;
+  width: 24rem;
+  height: 20rem;
+  display: flex;
+  justify-content: center;
+}
+
+.movieCard {
+  position: absolute;
+  width: 12rem;
+  height: 16rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+}
+
+.movieCard:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.movieTitle {
+  position: absolute;
+  bottom: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 0.875rem;
+  padding: 0.25rem;
+  width: 100%;
+  text-align: center;
+}
+
+.movieImage {
+  width: 8rem;
+  height: 12rem;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+}

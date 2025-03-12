@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import RecommendationContent from "@/components/mainForm/RecommendationContent";
 import RecommendationPopup from "@/components/mainForm/RecommendationPopup";
 import LoadingPopup from "@/components/ui/LoadingPopup"; // 로딩 팝업 임포트
+import { searchYoutubeTrailer } from "@/services/youtube";
 
 interface ReadDiaryProps {
   diaryData: any;
@@ -39,6 +40,12 @@ export default function ReadDiary({
   } | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [youtubeVideoId, setYoutubeVideoId] = useState<string | null>(null);
+  const [showYoutubePopup, setShowYoutubePopup] = useState(false);
+  const [posterData, setPosterData] = useState<{
+    title: string;
+    poster_url: string;
+  } | null>(null);
 
   // ✅ 디버깅: `diaryData`가 올바르게 전달되는지 확인
   useEffect(() => {
@@ -248,6 +255,50 @@ export default function ReadDiary({
     console.log("contentData 변경됨:", contentData);
   }, [contentData]);
 
+  // YouTube 검색 함수
+  const handleYoutubeSearch = async () => {
+    if (!recommendContent) {
+      alert("추천 콘텐츠가 없습니다. 먼저 OTT 추천을 받아주세요.");
+      return;
+    }
+
+    try {
+      // recommendContent에서 제목 추출 (첫 번째 줄이 제목이라고 가정)
+      const title = recommendContent.split("\n")[0];
+      const result = await searchYoutubeTrailer(title);
+      setYoutubeVideoId(result.videoId);
+      setShowYoutubePopup(true);
+    } catch (error) {
+      console.error("YouTube 검색 실패:", error);
+      alert("예고편을 찾을 수 없습니다.");
+    }
+  };
+
+  // 포스터만 가져오는 함수
+  const getPosterUrl = async () => {
+    try {
+      const date = dayjs(diaryData.date).format("YYYY-MM-DD");
+      const response = await fetch(`/api/content?date=${date}`);
+      const data = await response.json();
+
+      if (data.content_info) {
+        setPosterData({
+          title: data.content_info.title,
+          poster_url: data.content_info.poster_url,
+        });
+      }
+    } catch (error) {
+      console.error("포스터 데이터 로드 실패:", error);
+    }
+  };
+
+  // useEffect에서 포스터 가져오기
+  useEffect(() => {
+    if (recommendContent) {
+      getPosterUrl();
+    }
+  }, [recommendContent]);
+
   return (
     <div className={`${styles.diaryPanel} ${styles.open}`}>
       <div className={styles.scrollContainer}>
@@ -287,14 +338,31 @@ export default function ReadDiary({
         </div>
         <div className={styles.resultContent}>
           <h2 className={styles.diaryTitle}>오늘의 OTT 콘텐츠</h2>
-          {/* 📌 추천 콘텐츠 컴포넌트 */}
           <RecommendationContent
             recommendContent={recommendContent}
             resultEmotion={resultEmotion}
+            posterUrl={posterData?.poster_url}
           />
 
-          {/* 📌 체크박스와 추천 버튼 - 추천 콘텐츠가 null일 때만 표시 */}
-          {recommendContent === null && (
+          {/* 추천 콘텐츠가 있을 때만 YouTube 버튼 표시 */}
+          {recommendContent && (
+            <div className={styles.youtubeButtonWrapper}>
+              <button
+                className={styles.youtubeButton}
+                onClick={handleYoutubeSearch}
+              >
+                <img
+                  src="icon-ott/icon-youtube.png"
+                  alt="youtube"
+                  className={styles.youtubeIcon}
+                />
+                예고편 보기
+              </button>
+            </div>
+          )}
+
+          {/* 추천 콘텐츠가 없을 때 추천받기 버튼들 표시 */}
+          {!recommendContent && (
             <>
               <div className={styles.checkboxContainer}>
                 <label>
@@ -360,8 +428,9 @@ export default function ReadDiary({
 
         {/* 📌 MBTI 없음 팝업 */}
         {showMbtiPopup && (
-          <div className={styles.recommendPopup}>
-            <p>등록된 회원 MBTI가 없습니다. 회원정보를 수정해주세요.</p>
+          <div className={styles.recommendPopup2}>
+            <p>등록된 회원 MBTI가 없습니다. </p>
+            <p>회원정보를 수정해주세요.</p>
             <button onClick={() => router.push("/profile")}>
               회원정보 수정
             </button>
@@ -371,6 +440,35 @@ export default function ReadDiary({
       <LoadingPopup isOpen={loading} message="momo가 답변을 작성 중이예요..." />
       {isDeleting && (
         <LoadingPopup isOpen={true} message="momo가 삭제 중입니다..." />
+      )}
+
+      {/* YouTube 팝업 - return 문 마지막에 추가 */}
+      {showYoutubePopup && youtubeVideoId && (
+        <div
+          className={styles.youtubePopup}
+          onClick={() => setShowYoutubePopup(false)}
+        >
+          <div
+            className={styles.youtubeContainer}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <iframe
+              width="100%"
+              height="100%"
+              src={`https://www.youtube.com/embed/${youtubeVideoId}`}
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+            <button
+              className={styles.closeButton}
+              onClick={() => setShowYoutubePopup(false)}
+            >
+              X
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

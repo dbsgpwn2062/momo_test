@@ -1,0 +1,38 @@
+.platformContainer {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-top: 15px;
+  padding-bottom: 25px;
+  position: fixed;
+  top: 132px; /* 헤더(72px) + 서치바(60px) */
+  left: 0;
+  width: 100%;
+  background-color: white;
+  z-index: 899;
+  height: 95px; /* 고정 높이 설정 */
+}
+
+.platformButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, border 0.2s ease;
+  border-radius: 10px;
+  padding: 5px;
+  margin-left: 10px;
+}
+
+.platformImage {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+}
+
+.selected {
+  transform: scale(1.1); /* ✅ 선택되면 커짐 */
+  border: 3px solid #626262; /* ✅ 테두리 추가 */
+  border-radius: 10px;
+}

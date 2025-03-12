@@ -4,17 +4,18 @@
   display: flex;
   justify-content: center;
   position: fixed;
-  top: 75px; /* 헤더 높이만큼 아래로 */
+  top: 80px; /* 헤더 바로 아래 */
   left: 0;
-  padding-top: 20px;
   background-color: rgb(255, 255, 255);
-  padding: 15px 0;
+  padding: 10px 0;
   z-index: 900;
+  height: 60px; /* 고정 높이 설정 */
 }
 
 /* ✅ 검색창과 리스트가 겹치지 않도록 여백 추가 */
 .movie-container {
-  margin-top: 210px; /* 헤더(60px) + 검색바(90px) 높이만큼 여백 추가 */
+  padding: 20px;
+  margin-top: 220px; /* 헤더(72px) + 서치바(60px) + 플랫폼필터(88px) */
 }
 
 .search-container {
@@ -44,141 +45,10 @@
   border: none;
   font-weight: bold;
   cursor: pointer;
-  border-radius: 25px;
+  border-radius: 15px;
   font-size: 16px;
 }
 
 .search-btn:hover {
   background-color: rgb(222, 102, 102);
-}
-
-/* 🎬 반응형 영화 그리드 */
-.movie-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
-  padding: 1rem;
-}
-
-/* ✅ 반응형 조정 (태블릿: 3열, 모바일: 2열) */
-@media (max-width: 1024px) {
-  .movie-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  }
-}
-
-@media (max-width: 768px) {
-  .movie-grid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  }
-}
-
-/* 🎬 영화 카드 */
-.movie-card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  transition: transform 0.2s;
-}
-
-.movie-card:hover {
-  transform: scale(1.05);
-}
-
-/* 🎥 영화 포스터 */
-.movie-poster {
-  width: 100%;
-  height: 300px;
-  object-fit: cover;
-}
-
-/* 🎬 영화 제목 */
-.movie-title {
-  padding: 0.5rem;
-  font-size: 1rem;
-  font-weight: bold;
-}
-
-/* 🏷️ 플랫폼 정보 */
-.movie-platform {
-  padding: 0.5rem;
-  color: #666;
-}
-
-/* 📅 영화 연도 */
-.movie-year {
-  font-size: 14px;
-  color: lightgray;
-}
-
-/* 🔘 상세 보기 버튼 */
-
-.details-btn:hover {
-  background-color: darkgoldenrod;
-}
-
-/* 🎬 영화 상세 팝업 */
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7); /* ✅ 어두운 투명 배경 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-}
-
-/* 📌 팝업 내부 스타일 */
-.popup-content {
-  background-color: #ffffff; /* ✅ 밝은 배경 */
-  padding: 20px;
-  border-radius: 10px;
-  max-width: 500px;
-  width: 90%;
-  text-align: left;
-  color: black;
-  font-size: 16px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-  position: relative; /* ✅ 닫기 버튼 위치 설정 */
-}
-
-/* 🎬 팝업 제목 */
-.popup-content h2 {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 15px;
-  color: black;
-}
-
-/* 📌 팝업 내 정보 스타일 */
-.popup-content p {
-  margin: 8px 0;
-  font-size: 16px;
-  color: black;
-}
-
-.popup-content strong {
-  font-weight: bold;
-  color: darkgoldenrod;
-}
-
-/* ❌ 닫기 버튼 */
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: red;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  font-size: 18px;
-  border-radius: 5px;
-}
-
-.close-btn:hover {
-  background: darkred;
 }

@@ -11,8 +11,14 @@ export default function SearchBar() {
 
   // ✅ 검색 실행 함수
   const handleSearch = () => {
-    if (query.trim()) {
-      router.push(`/search?q=${encodeURIComponent(query)}`); // ✅ 검색어를 URL에 포함해 이동
+    const trimmedQuery = query.trim();
+    console.log("Search query:", trimmedQuery); // 디버깅용 로그
+
+    if (trimmedQuery) {
+      const searchUrl = `/search?q=${encodeURIComponent(trimmedQuery)}`;
+      console.log("Redirecting to:", searchUrl); // 디버깅용 로그
+
+      router.push(searchUrl);
     }
   };
 
@@ -22,11 +28,25 @@ export default function SearchBar() {
         type="text"
         placeholder="OTT 콘텐츠 검색"
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && handleSearch()} // ✅ 엔터 키로 검색
+        onChange={(e) => {
+          console.log("Input value:", e.target.value); // 디버깅용 로그
+          setQuery(e.target.value);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            console.log("Enter key pressed"); // 디버깅용 로그
+            handleSearch();
+          }
+        }}
         className={styles.searchInput}
       />
-      <button className={styles.searchButton} onClick={handleSearch}>
+      <button
+        className={styles.searchButton}
+        onClick={() => {
+          console.log("Search button clicked"); // 디버깅용 로그
+          handleSearch();
+        }}
+      >
         <Image src="/utils/search1.png" alt="검색" width={40} height={40} />
       </button>
     </div>

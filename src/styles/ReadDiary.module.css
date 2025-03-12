@@ -191,6 +191,32 @@
   font-weight: 550;
 }
 
+.recommendPopup2 {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(50, 39, 39, 0.915);
+  width: 400px; /* ✅ 팝업 너비 고정 */
+  max-width: 80vw; /* ✅ 화면이 작을 경우 대비 */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.212);
+  z-index: 1000;
+  text-align: center;
+  color: white;
+  font-size: 20px;
+  font-weight: 550;
+}
+
+.recommendPopup2 button {
+  background-color: #1e0600;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 18px;
+  margin-top: 20px;
+}
+
 .recommendPopup1 {
   position: fixed;
   top: 50%;
@@ -211,8 +237,7 @@
 }
 
 .recommendContent {
-  max-height: 400px; /* ✅ 내부 콘텐츠 최대 높이 지정 */
-  overflow-y: auto; /* ✅ 내용이 넘칠 때만 스크롤 생성 */
+  max-height: auto; /* ✅ 내부 콘텐츠 최대 높이 지정 */
   padding-right: 10px; /* ✅ 스크롤바가 겹치지 않도록 여백 추가 */
   text-align: center;
 }
@@ -265,4 +290,133 @@
 .posterImage {
   max-width: 100%; /* 이미지가 부모 요소를 넘지 않도록 설정 */
   height: auto; /* 비율 유지 */
+}
+
+.youtubeButtonWrapper {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.youtubeButton {
+  padding: 24px 24px;
+  background-color: #ffffff;
+  box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.2);
+  color: rgb(0, 0, 0);
+  border: 1px solid rgb(224, 224, 224);
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 20px;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.youtubeIcon {
+  width: 30px;
+  height: auto;
+}
+
+.youtubeButton:hover {
+  background-color: #d5d5d5;
+}
+
+.youtubePopup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.youtubeContainer {
+  width: 70vw;
+  max-width: 1200px;
+  aspect-ratio: 16/9; /* 유튜브 영상 비율 유지 */
+  background-color: white;
+  padding: 2vw;
+  border-radius: 15px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+}
+
+.youtubeWrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.youtubeWrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.youtubeContainer .closeButton {
+  margin-top: 1vh;
+  padding: 1vh 1vw;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 2rem;
+}
+.youtubeContainer .closeButton:hover {
+  color: #333;
+  background-color: #ffffff;
+}
+/* 화면 비율 조정을 위한 미디어 쿼리 */
+@media (max-aspect-ratio: 16/9) {
+  .youtubeContainer {
+    width: 90vw;
+    height: auto;
+  }
+
+  .youtubeWrapper {
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 비율 유지 */
+    height: auto;
+  }
+}
+
+.posterWrapper {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.posterImage {
+  max-width: 200px; /* 또는 원하는 크기 */
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 기존 팝업용 스타일과 구분하기 위해 새로운 클래스 사용 */
+.recommendContent .contentPosterWrapper {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.recommendContent .contentPosterImage {
+  max-width: 200px;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }

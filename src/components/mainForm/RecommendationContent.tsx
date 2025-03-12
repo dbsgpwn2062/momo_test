@@ -3,11 +3,13 @@ import styles from "@/styles/ReadDiary.module.css";
 interface RecommendationContentProps {
   recommendContent: string | null;
   resultEmotion: string | null;
+  posterUrl?: string;
 }
 
 export default function RecommendationContent({
   recommendContent,
   resultEmotion,
+  posterUrl,
 }: RecommendationContentProps) {
   if (!recommendContent && !resultEmotion) return null;
 
@@ -30,6 +32,15 @@ export default function RecommendationContent({
       {recommendContent && (
         <div className={styles.recommendContent}>
           <h3>📌 추천 콘텐츠</h3>
+          {posterUrl && (
+            <div className={styles.contentPosterWrapper}>
+              <img
+                src={posterUrl}
+                alt="콘텐츠 포스터"
+                className={styles.contentPosterImage}
+              />
+            </div>
+          )}
           <p>{recommendContent}</p>
         </div>
       )}

@@ -3,6 +3,7 @@
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import styles from "@/styles/ServiceSlider.module.css";
 
 const ServiceSlider = () => {
   const settings = {
@@ -17,14 +18,26 @@ const ServiceSlider = () => {
 
   return (
     <Slider {...settings}>
-      <div>
-        <img src="/images/slide11.png" alt="감성 일기 작성" />
+      <div className={styles.slideContainer}>
+        <img
+          src="../images/slide11.png"
+          alt="감성 일기 작성"
+          className={styles.slideImage}
+        />
       </div>
-      <div>
-        <img src="/images/slide12.png" alt="AI 감정 분석" />
+      <div className={styles.slideContainer}>
+        <img
+          src="../images/slide12.png"
+          alt="AI 감정 분석"
+          className={styles.slideImage}
+        />
       </div>
-      <div>
-        <img src="/images/slide13.png" alt="OTT 추천" />
+      <div className={styles.slideContainer}>
+        <img
+          src="/images/slide13.png"
+          alt="OTT 추천"
+          className={styles.slideImage}
+        />
       </div>
     </Slider>
   );
